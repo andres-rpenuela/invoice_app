@@ -1,0 +1,53 @@
+services:
+
+  angular-dev:
+    build:
+      context: .
+      target: dev
+    ports:
+      - "4200:4200"
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    env_file:
+      - .env
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+
+  angular-test-runner:
+    build:
+      context: .
+      target: test-runner
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+
+  angular-test:
+    build:
+      context: .
+      target: runtime-test
+      args:
+        PROFILE: test
+    ports:
+      - "4300:80"
+    env_file:
+      - .env
+
+  angular-prod:
+    build:
+      context: .
+      target: runtime-prod
+      args:
+        PROFILE: production
+    ports:
+      - "80:80"
+    env_file:
+      - .env
+# Crear docker con ia: docker init
+# Start your application by running → docker compose up --build (if detect changes) or docker compose up (last execution)
+#  Your application will be available at http://localhost:4200
+
+
+# docker compose up angular-dev --build
+# docker compose up angular-prod --build -d
+# docker compose up angular-test-runner --build
