@@ -1,1 +1,65 @@
-<h1>Invoice</h1>
+
+<div class="invoice-wrapper">
+  <div class="invoice-header">
+    <!-- Encabezado de la factura -->
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+      <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Factura Icon" width="40" height="40" style="vertical-align: middle;" />
+      <div style="text-align: right;">
+        <h1 style="margin-bottom: 4px;">Factura</h1>
+        <h2 style="margin-top: 0;">{{ invoice.name }} <span class="invoice-id">#{{ invoice.id }}</span></h2>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="invoice-info">
+    <!-- Información del cliente y empresa -->
+    <div class="flex gap-6">
+      <div class="card bg-base-100 shadow-md w-1/2">
+        <div class="card-body">
+          <h4 class="card-title text-primary">Cliente</h4>
+          <p><span class="font-semibold">Nombre:</span> {{ invoice.client.name }} {{ invoice.client.lastName }}</p>
+          <p><span class="font-semibold">Dirección:</span> {{ invoice.client.address.street }} {{ invoice.client.address.number }}, {{ invoice.client.address.city }}, {{ invoice.client.address.country }}</p>
+        </div>
+      </div>
+      <div class="card bg-base-100 shadow-md w-1/2">
+        <div class="card-body text-right">
+          <h4 class="card-title text-secondary">Empresa</h4>
+          <p><span class="font-semibold">Nombre:</span> {{ invoice.company.name }}</p>
+          <p><span class="font-semibold">Número Fiscal:</span> {{ invoice.company.fiscalNumber }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="invoice-items">
+    <!-- Sección de items/componentes -->
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <img src="https://cdn-icons-png.flaticon.com/512/1828/1828884.png" alt="Componentes Icon" width="24" height="24" style="vertical-align: middle;" />
+      <h3>Items</h3>
+    </div>
+    <table class="item-table">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Cantidad</th>
+          <th>Precio</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for(item of invoice.items; track item.id){
+          <tr>
+            <td class="item-product">{{ item.product }}</td>
+            <td class="item-qty">{{ item.quantity }}</td>
+            <td class="item-price">{{ item.price }}</td>
+          </tr>
+        }@empty {
+          <tr><td colspan="3" class="item-row empty">No hay items.</td></tr>
+        }
+      </tbody>
+    </table>
+  </div>
+    <!-- Acciones de la factura -->
+<!--  <div class="invoice-actions">
+    <button class="pdf-btn" (click)="generatePDF()">Generar PDF e Imprimir</button>
+  </div>
+-->
+</div>
