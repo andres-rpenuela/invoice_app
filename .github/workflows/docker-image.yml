@@ -19,9 +19,20 @@ jobs:
         with:
           node-version: 20
           cache: 'npm'
+          cache-dependency-path: package-lock.json
 
       - name: Instalar dependencias
         run: npm ci
 
+      - name: Instalar Chrome
+        run: sudo apt-get install -y chromium-browser
+
       - name: Ejecutar tests
         run: npm run test -- --watch=false --browsers=ChromeHeadless
+
+      - name: Guardar cobertura
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: coverage/
