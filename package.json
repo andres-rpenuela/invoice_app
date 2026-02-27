@@ -8,8 +8,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "test-ci": "ng test --no-watch --no-progress",
-    "test-headed": "ng test --browsers=chrome",
-    "test-headless": "ng test --browsers=chromeHeadless",
+    "test-headed": "ng test --browsers=chromium",
+    "test-headless": "ng test --browsers=chromium --watch=false",
     "coverage": "ng test --coverage"
   },
   "prettier": {
