@@ -1,4 +1,4 @@
-name: Angular CI
+name: Angular CI/CD
 
 on:
   push:
@@ -7,13 +7,15 @@ on:
     branches: ["main"]
 
 jobs:
-  test:
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ Clonar repo
       - name: Checkout código
         uses: actions/checkout@v4
 
+      # 2️⃣ Configurar Node.js
       - name: Usar Node 20
         uses: actions/setup-node@v4
         with:
@@ -21,18 +23,37 @@ jobs:
           cache: 'npm'
           cache-dependency-path: package-lock.json
 
+      # 3️⃣ Instalar dependencias
       - name: Instalar dependencias
         run: npm ci
 
-      - name: Instalar Chrome
-        run: sudo apt-get install -y chromium-browser
+      # 4️⃣ Instalar navegadores de Playwright
+      - name: Instalar navegadores Playwright
+        run: npx playwright install --with-deps
 
+      # 5️⃣ Ejecutar lint
+      - name: Ejecutar lint
+        run: npm run lint
+
+      # 6️⃣ Ejecutar tests unitarios (Vitest + Playwright Chromium)
       - name: Ejecutar tests
-        run: npm run test -- --watch=false --browsers=ChromeHeadless
+        run: npx vitest run --browser chromium
 
+      # 7️⃣ Guardar cobertura de tests
       - name: Guardar cobertura
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: coverage/
+
+      # 8️⃣ Build de producción Angular
+      - name: Build Angular producción
+        run: npm run build -- --prod
+
+      # 9️⃣ Guardar build como artefacto listo para Render
+      - name: Guardar build
+        uses: actions/upload-artifact@v4
+        with:
+          name: angular-dist
+          path: dist/
