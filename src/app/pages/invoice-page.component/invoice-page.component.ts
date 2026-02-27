@@ -17,10 +17,13 @@ import html2canvas from 'html2canvas';
 import { ChangeDetectionStrategy, Component, inject, Inject, OnInit } from '@angular/core';
 import { InvoiceService } from '../../invoice/servicies/invoice.service';
 import { Invoice } from '../../invoice/models/invoice.model';
+import { InvoiceHeadComponent } from '../../invoice/components/invoice-head/invoice-head.component';
+import { InvoiceDetailComponent } from '../../invoice/components/invoice-detail/invoice-detail.component';
+import { InvoiceItemComponent } from '../../invoice/components/invoice-item/invoice-item.component';
 
 @Component({
   selector: 'app-invoice-page.component',
-  imports: [],
+  imports: [InvoiceHeadComponent, InvoiceDetailComponent, InvoiceItemComponent],
   templateUrl: './invoice-page.component.html',
   styleUrl: './invoice-page.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

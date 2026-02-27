@@ -1,0 +1,16 @@
+<div class="flex gap-6">
+	<div class="card bg-base-100 shadow-md w-1/2">
+		<div class="card-body">
+			<h4 class="card-title text-primary text-lg font-semibold">Cliente</h4>
+			<p class="text-base-content"><span class="font-semibold">Nombre:</span> {{ client().name }} {{ client().lastName }}</p>
+			<p class="text-base-content"><span class="font-semibold">Dirección:</span> {{ client().address.street }} {{ client().address.number }}, {{ client().address.city }}, {{ client().address.country }}</p>
+		</div>
+	</div>
+	<div class="card bg-base-100 shadow-md w-1/2">
+		<div class="card-body text-right">
+			<h4 class="card-title text-secondary text-lg font-semibold">Empresa</h4>
+			<p class="text-base-content"><span class="font-semibold">Nombre:</span> {{ company().name }}</p>
+			<p class="text-base-content"><span class="font-semibold">Número Fiscal:</span> {{ company().fiscalNumber }}</p>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,13 @@
+<div class="card bg-base-100 shadow-md mb-6">
+	<div class="card-body flex items-center gap-4">
+      @if( photo() ){
+        <img [src]="photo()" alt="Factura Icon" width="48" height="48" class="rounded-full shadow-md bg-primary" />
+      }@else{
+        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Factura Icon" width="48" height="48" class="rounded-full shadow-md bg-primary" />
+      }
+		<div class="flex-1 text-right">
+			<h1 class="text-3xl font-semibold text-primary mb-1">Factura</h1>
+			<h2 class="text-xl font-medium text-base-content mt-0">{{ title() }} <span class="invoice-id text-base text-secondary font-normal">#{{ numberInvoice() }}</span></h2>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,29 @@
+<div class="card custom-bg bg-base-100 shadow-md">
+	<div class="card-body">
+		<div class="flex items-center gap-3 mb-4">
+			<img src="https://cdn-icons-png.flaticon.com/512/1828/1828884.png" alt="Componentes Icon" width="28" height="28" class="mr-2 bg-primary rounded-full" />
+			<h3 class="text-2xl font-semibold text-primary">Items</h3>
+		</div>
+		<table class="min-w-full rounded-lg">
+			<thead class="bg-primary text-primary-content">
+				<tr>
+					<th class="py-2 px-4 text-left text-primary-content font-semibold">Producto</th>
+					<th class="py-2 px-4 text-left text-primary-content font-semibold">Cantidad</th>
+					<th class="py-2 px-4 text-left text-primary-content font-semibold">Precio</th>
+				</tr>
+			</thead>
+			<tbody>
+				@for(item of items(); track item.id){
+					<tr class="hover:bg-secondary/10">
+						<td class="py-2 px-4 font-medium text-secondary">{{ item.product }}</td>
+						<td class="py-2 px-4 text-base-content">{{ item.quantity }}</td>
+						<td class="py-2 px-4 text-success font-bold">{{ item.price }}</td>
+					</tr>
+				}@empty {
+					<tr><td colspan="3" class="py-2 px-4 text-base-content text-center">No hay items.</td></tr>
+				}
+			</tbody>
+
+		</table>
+	</div>
+</div>

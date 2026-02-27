@@ -1,8 +1,27 @@
+
 /* You can add global styles to this file, and also import other style files */
 
 @import "tailwindcss";
-@plugin "daisyui";
+/*@plugin "daisyui";*/
+@plugin "daisyui" {
+  /**themes: light, dark, cupcake, bumblebee, emerald, corporate, synthwave, retro, cyberpunk, valentine, halloween, garden, forest, aqua, lofi, pastel, fantasy, wireframe, black, luxury, dracula, cmyk;**/
+   themes: winter --default, night --prefersdark;
+}
+
+@custom-variant dark (&:where([data-theme=night], [data-theme=night] *));
+
 
 @plugin "flowbite/plugin";
 @source "../node_modules/flowbite";
 
+
+body {
+  @apply min-h-screen w-full m-0 box-border
+         bg-base-100 text-base-content font-sans
+         transition-colors duration-300;
+}
+
+/* toggle flotante */
+.swap {
+  @apply bg-base-300 rounded-full p-2 shadow-lg flex items-center justify-center;
+}

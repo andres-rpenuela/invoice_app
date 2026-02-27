@@ -1,4 +1,4 @@
-# AngularApp
+ls -l# AngularApp
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.4.
 
@@ -57,3 +57,17 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+---
+
+## Notas
+La carpeta `npm-cache` es utilizada por npm para almacenar archivos temporales y caché de paquetes. 
+
+Si experimentas problemas con la instalación de paquetes o con el rendimiento de npm, limpiar el caché puede ayudar a resolver estos problemas.
+
+a. Borrar manualmente: `C:\Users\andre\AppData\Local\npm-cache`
+b. Borrar y verificar con comandos:
+```bash
+npm cache clean --force
+npm cache verify
+```
