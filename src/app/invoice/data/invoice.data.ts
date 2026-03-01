@@ -36,5 +36,11 @@ export const invoiceData:Invoice = {
       price: 899,
       quantity: 3
     }
+  ],
+  discounts: [
+    { name: 'Descuento especial', percent: 10, type: 'discount' }
+  ],
+  taxes: [
+    { name: 'IVA', percent: 19, type: 'tax' }
   ]
 }

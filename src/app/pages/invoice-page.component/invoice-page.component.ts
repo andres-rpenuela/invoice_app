@@ -14,32 +14,29 @@ import html2canvas from 'html2canvas';
       window.print();
     });
   }*/
-import { ChangeDetectionStrategy, Component, inject, Inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, } from '@angular/core';
 import { InvoiceService } from '../../invoice/servicies/invoice.service';
 import { Invoice } from '../../invoice/models/invoice.model';
 import { InvoiceHeadComponent } from '../../invoice/components/invoice-head/invoice-head.component';
 import { InvoiceDetailComponent } from '../../invoice/components/invoice-detail/invoice-detail.component';
 import { InvoiceItemComponent } from '../../invoice/components/invoice-item/invoice-item.component';
+import {InvoiceTotalComponent} from '../../invoice/components/invoice-total/invoice-total';
 
 @Component({
   selector: 'app-invoice-page.component',
-  imports: [InvoiceHeadComponent, InvoiceDetailComponent, InvoiceItemComponent],
+  imports: [InvoiceHeadComponent, InvoiceDetailComponent, InvoiceItemComponent, InvoiceTotalComponent],
   templateUrl: './invoice-page.component.html',
   styleUrl: './invoice-page.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InvoicePageComponent implements OnInit{
+export class InvoicePageComponent{
 
   private _invoiceService = inject(InvoiceService)
 
-  ngOnInit(): void {
-
-  }
 
 
   get invoice():Invoice{
     return this._invoiceService.getInvoice();
   }
-
 
 }

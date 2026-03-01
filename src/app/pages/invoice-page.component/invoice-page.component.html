@@ -14,4 +14,14 @@
 			<app-invoice-item [items]="invoice.items"></app-invoice-item>
 		</div>
 	</div>
+  <div class="card bg-base-100 dark:bg-base-300 shadow-md">
+    <div class="card-body">
+      <app-invoice-total
+        [subtotal]="invoice.subtotal ?? 0"
+        [discounts]="invoice.discounts ?? []"
+        [taxes]="invoice.taxes ?? []"
+        [total]="invoice.total ?? 0"
+      ></app-invoice-total>
+    </div>
+  </div>
 </div>
