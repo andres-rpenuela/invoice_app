@@ -1,6 +1,8 @@
-import { Component, effect, linkedSignal, OnInit, signal } from '@angular/core';
+import {Component, inject, linkedSignal, OnInit, signal} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { initFlowbite } from 'flowbite'
+import {ThemeService} from './shared/services/theme/theme.service';
+
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet],
@@ -9,26 +11,24 @@ import { initFlowbite } from 'flowbite'
 })
 export class App implements OnInit {
   protected readonly title = signal('angular-app');
-  // Inicializa desde localStorage si existe
-  theme = signal<string>(localStorage.getItem('theme') || 'winter');
 
-  constructor(){
-    // Cada vez que cambie la señal, actualiza el body y localStorage
-    effect( () =>{
-      const current = this.theme();
-      document.body.setAttribute('data-theme', current);
-      localStorage.setItem('theme', current);
-    })
-  }
-
+  public themeService = inject(ThemeService);
+  private _theme = linkedSignal( () => this.themeService.currentTheme );
 
   ngOnInit(): void {
     initFlowbite();
   }
 
-  toggleTheme() {
-    // Cambia entre winter y night
-    this.theme.update( value => value === 'winter' ? 'night' : 'winter');
+  getTitle() {
+    return this.title();
+  }
 
+
+  toggleTheme() {
+    this.themeService.toggleTheme()
+  }
+
+  get theme() {
+    return this._theme();
   }
 }

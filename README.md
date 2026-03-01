@@ -71,3 +71,48 @@ b. Borrar y verificar con comandos:
 npm cache clean --force
 npm cache verify
 ```
+
+----
+
+Para los test del proeycto, instalar:
+
+```bash
+# Instalar Playwright como dependencia de desarrollo
+npm install -D playwright
+
+# Si falla
+npx playwright install
+
+# Si falla, instalar el navegador específico
+npx playwright install chromium
+```
+
+---
+
+Regla rápida para npm:
+
+| Comando                  | ¿Dónde se instala? |
+| ------------------------ | ------------------ |
+| `npm install paquete`    | Proyecto           |
+| `npm install -D paquete` | Proyecto (dev)     |
+| `npm install -g paquete` | Global             |
+
+Para ejecutar herramientas del proyecto usar `npx`:
+
+```bash
+npx playwright test
+npx ng test
+npx ng serve
+```
+Esto usa la versión que está en node_modules
+
+O cuando no quieres contaminar tu sistema:
+
+En vez de:
+```
+npm install -g @angular/cli
+```
+
+Puedes hacer:
+```
+npx @angular/cli new proyecto
