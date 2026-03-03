@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { InvoiceItem } from '../../models/invoice-item.model';
 
 @Component({
@@ -10,5 +10,10 @@ import { InvoiceItem } from '../../models/invoice-item.model';
 })
 export class InvoiceItemComponent {
 
-  items=input.required<InvoiceItem[]>()
- }
+  removeItenEmmit = output<number>();
+  items = input.required<InvoiceItem[]>();
+
+  removeItem(item: InvoiceItem) {
+    this.removeItenEmmit.emit(item!.id);
+  }
+}

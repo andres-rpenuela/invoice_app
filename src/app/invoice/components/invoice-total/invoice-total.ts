@@ -1,9 +1,10 @@
 import {Component, input} from '@angular/core';
 import {InvoiceModifier} from '../../models/invoice-modifier.model';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'app-invoice-total',
-  imports: [],
+  imports: [DecimalPipe],
   templateUrl: './invoice-total.html',
   styleUrl: './invoice-total.css',
 })

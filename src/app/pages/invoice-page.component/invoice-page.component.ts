@@ -39,4 +39,8 @@ export class InvoicePageComponent{
     return this._invoiceService.getInvoice();
   }
 
+  removeItem(id: number) {
+  this._invoiceService.removeItem(id);
+}
+
 }
