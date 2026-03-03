@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { Client } from '../../models/client.models';
 import { Company } from '../../models/company.model';
 

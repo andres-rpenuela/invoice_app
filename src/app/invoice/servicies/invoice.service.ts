@@ -1,6 +1,7 @@
 import { Injectable, linkedSignal, WritableSignal } from '@angular/core';
 import { invoiceData } from '../data/invoice.data';
 import { Invoice } from '../models/invoice.model';
+import { InvoiceItem } from '../models/invoice-item.model';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ export class InvoiceService {
   private _invoice: WritableSignal<Invoice> = linkedSignal(() => invoiceData);
 
   // Calcula subtotal, descuentos y tasas por item
-  private calculateItemTotals(items: any[]): { subtotal: number, discounts: number, taxes: number } {
+  private calculateItemTotals(items: InvoiceItem[]): { subtotal: number, discounts: number, taxes: number } {
     let subtotal = 0;
     let discounts = 0;
     let taxes = 0;
