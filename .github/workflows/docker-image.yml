@@ -49,7 +49,7 @@ jobs:
 
       # 8️⃣ Build de producción Angular
       - name: Build Angular producción
-        run: npm run build -- --prod
+        run: npm run build -- --configuration production
 
       # 9️⃣ Guardar build como artefacto listo para Render
       - name: Guardar build
