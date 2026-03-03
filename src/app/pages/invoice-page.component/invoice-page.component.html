@@ -1,0 +1,31 @@
+<div class="container mx-auto py-8 max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-4xl">
+	<div class="card bg-base-100 dark:bg-base-300  shadow-lg mb-8">
+		<div class="card-body">
+			<app-invoice-head [numberInvoice]="invoice.id" [title]="invoice.name"></app-invoice-head>
+		</div>
+	</div>
+	<div class="card bg-base-100 dark:bg-base-300  shadow-md mb-8">
+		<div class="card-body">
+			<app-invoice-detail [client]="invoice.client" [company]="invoice.company"></app-invoice-detail>
+		</div>
+	</div>
+	<div class="card bg-base-100 dark:bg-base-300 shadow-md">
+		<div class="card-body">
+			<app-invoice-item [items]="invoice.items"
+      (removeItenEmmit)="removeItem($event)"></app-invoice-item>
+		</div>
+	</div>
+  <div class="h-6"></div>
+  @if((invoice.items ?? []).length > 0){
+    <div class="card bg-base-100 dark:bg-base-300 shadow-md">
+      <div class="card-body">
+        <app-invoice-total
+          [subtotal]="invoice.subtotal ?? 0"
+          [discounts]="invoice.discounts ?? []"
+          [taxes]="invoice.taxes ?? []"
+          [total]="invoice.total ?? 0"
+        ></app-invoice-total>
+      </div>
+    </div>
+  }
+</div>

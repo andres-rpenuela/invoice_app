@@ -1,4 +1,4 @@
-# AngularApp
+ls -l# AngularApp
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.4.
 
@@ -57,3 +57,62 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+---
+
+## Notas
+La carpeta `npm-cache` es utilizada por npm para almacenar archivos temporales y caché de paquetes. 
+
+Si experimentas problemas con la instalación de paquetes o con el rendimiento de npm, limpiar el caché puede ayudar a resolver estos problemas.
+
+a. Borrar manualmente: `C:\Users\andre\AppData\Local\npm-cache`
+b. Borrar y verificar con comandos:
+```bash
+npm cache clean --force
+npm cache verify
+```
+
+----
+
+Para los test del proeycto, instalar:
+
+```bash
+# Instalar Playwright como dependencia de desarrollo
+npm install -D playwright
+
+# Si falla
+npx playwright install
+
+# Si falla, instalar el navegador específico
+npx playwright install chromium
+```
+
+---
+
+Regla rápida para npm:
+
+| Comando                  | ¿Dónde se instala? |
+| ------------------------ | ------------------ |
+| `npm install paquete`    | Proyecto           |
+| `npm install -D paquete` | Proyecto (dev)     |
+| `npm install -g paquete` | Global             |
+
+Para ejecutar herramientas del proyecto usar `npx`:
+
+```bash
+npx playwright test
+npx ng test
+npx ng serve
+```
+Esto usa la versión que está en node_modules
+
+O cuando no quieres contaminar tu sistema:
+
+En vez de:
+```
+npm install -g @angular/cli
+```
+
+Puedes hacer:
+```
+npx @angular/cli new proyecto

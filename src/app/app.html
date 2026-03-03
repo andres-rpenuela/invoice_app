@@ -4,4 +4,19 @@
 <router-outlet />
 
 <!-- footer -->
+
+
 <!-- Modal toggle -->
+<div class="fixed top-4 right-4 z-[999]">
+  <label class="swap swap-rotate cursor-pointer w-14 h-8 bg-base-300 rounded-full shadow-lg relative flex items-center">
+    <!-- checkbox oculto -->
+    <input type="checkbox" [checked]="theme === 'night'" (change)="toggleTheme()" class="sr-only" />
+
+    <!-- círculo que se mueve -->
+    <span
+      class="absolute left-1 top-1 w-6 h-6 bg-gray-950 dark:bg-blue-400 rounded-full transition-all duration-300"
+      [class.translate-x-6]="theme === 'night'"
+      [class.bg-gray-800]="theme === 'night'"
+    ></span>
+  </label>
+</div>

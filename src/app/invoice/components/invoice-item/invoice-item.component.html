@@ -1,0 +1,70 @@
+<div class="card custom-bg bg-base-100 shadow-md">
+	<div class="card-body">
+		<div class="flex items-center gap-3 mb-4">
+			<img src="https://cdn-icons-png.flaticon.com/512/1828/1828884.png" alt="Componentes Icon" width="28" height="28" class="mr-2 bg-primary rounded-full" />
+			<h3 class="text-2xl font-semibold text-primary">Items</h3>
+		</div>
+		<table class="min-w-full rounded-lg overflow-x-auto block md:table">
+			<thead class="bg-primary text-primary-content">
+				<tr>
+					<th class="py-2 px-4 text-left text-primary-content font-semibold">Producto</th>
+					<th class="py-2 px-4 text-left text-primary-content font-semibold">Cantidad</th>
+					<th class="py-2 px-4 text-left text-primary-content font-semibold">Precio</th>
+					  <th class="py-2 px-4 text-left text-primary-content font-semibold">Descuentos</th>
+					  <th class="py-2 px-4 text-left text-primary-content font-semibold">Impuestos</th>
+          <th class="py-2 px-4 text-left text-primary-content font-semibold">Remove</th>
+				</tr>
+			</thead>
+			<tbody>
+				@for(item of items(); track item.id){
+					<tr class="hover:bg-secondary/10">
+											<td class="py-2 px-4 font-medium text-secondary">{{ item.product }}</td>
+											<td class="py-2 px-4 text-base-content">{{ item.quantity }}</td>
+											<td class="py-2 px-4 text-success font-bold">{{ item.price }}</td>
+							<td class="py-2 px-4 text-base-content">
+								<div class="flex flex-wrap gap-1">
+									@if(item.discounts?.length){
+										@for(discount of item.discounts; track $index){
+											<span class="badge badge-success badge-xs whitespace-nowrap">{{ discount.name }}: {{ discount.percent }}%</span>
+										}
+									}@else{
+										<span class="text-xs text-base-content/50">Sin descuentos</span>
+									}
+								</div>
+							</td>
+							<td class="py-2 px-4 text-base-content">
+								<div class="flex flex-wrap gap-1">
+									@if(item.taxes?.length){
+										@for(tax of item.taxes; track $index){
+											<span class="badge badge-info badge-xs whitespace-nowrap">{{ tax.name }}: {{ tax.percent }}%</span>
+										}
+									}@else{
+										<span class="text-xs text-base-content/50">Sin impuestos</span>
+									}
+								</div>
+							</td>
+											<td>
+												<button type="button" class="btn btn-ghost btn-sm text-error" (click)="removeItem(item)">
+													<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+														<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+													</svg>
+												</button>
+											</td>
+					</tr>
+				}@empty {
+					<tr>
+						<td colspan="6" class="py-6 px-4 text-base-content text-center">
+							<div class="flex flex-col items-center justify-center gap-2">
+								<svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-base-content/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2a4 4 0 0 1 4-4h2a4 4 0 0 1 4 4v2M9 17H7a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v6a4 4 0 0 1-4 4h-2M9 17v2a4 4 0 0 0 4 4h2a4 4 0 0 0 4-4v-2" />
+								</svg>
+								<span class="text-base-content/60 text-lg">No hay items en la factura.</span>
+							</div>
+						</td>
+					</tr>
+				}
+			</tbody>
+
+		</table>
+	</div>
+</div>

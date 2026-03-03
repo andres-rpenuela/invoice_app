@@ -1,0 +1,29 @@
+<!-- src/app/invoice/components/invoice-total/invoice-total.html -->
+<div class="card bg-base-100 shadow-xl max-w-md mx-auto">
+  <div class="card-body">
+    <div class="flex justify-between mb-2">
+      <span class="font-medium text-base-content">Subtotal:</span>
+      <span class="font-semibold">{{ subtotal() | number:'1.2-2' }}</span>
+    </div>
+
+    @for ( discount of discounts(); track discount) {
+      <div class="flex justify-between mb-2">
+        <span class="font-medium text-base-content">{{ discount.name }}:</span>
+        <span class="font-semibold text-error">-{{ discount.percent | number:'1.2-2' }}</span>
+      </div>
+    }
+
+    @for (tax of taxes(); track tax) {
+      <div class="flex justify-between mb-2">
+        <span class="font-medium text-base-content">{{ tax.name }}:</span>
+        <span class="font-semibold text-success">+{{ tax.percent | number:'1.2-2' }}</span>
+      </div>
+    }
+
+    <div class="divider my-2"></div>
+    <div class="flex justify-between">
+      <span class="text-lg font-bold text-base-content">Total:</span>
+      <span class="text-lg font-bold text-success">{{ total() | number:'1.2-2' }}</span>
+    </div>
+  </div>
+</div>
