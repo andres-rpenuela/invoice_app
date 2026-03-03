@@ -37,7 +37,7 @@ jobs:
 
       # 6️⃣ Ejecutar tests unitarios (Vitest + Playwright Chromium)
       - name: Ejecutar tests
-        run: ng test --browsers=ChromiumHeadless --watch=false
+        run: run: npx ng test --browsers=ChromiumHeadless --watch=false
 
       # 7️⃣ Guardar cobertura de tests
       - name: Guardar cobertura
