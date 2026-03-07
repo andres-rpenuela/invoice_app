@@ -16,7 +16,7 @@
 		</div>
 	</div>
   <div class="h-6"></div>
-  @if((invoice.items ?? []).length > 0){
+  @if(invoice.items && invoice.items.length > 0){
     <div class="card bg-base-100 dark:bg-base-300 shadow-md">
       <div class="card-body">
         <app-invoice-total

@@ -1,0 +1,77 @@
+@defer (when productForm && !formError()) {
+  <div class="flex items-center justify-center min-h-screen">
+    <div class="max-w-2xl w-full mx-auto p-8 bg-base-100 rounded shadow">
+      <h1 class="text-2xl font-bold mb-8 text-center">Alta de producto</h1>
+      <form [formGroup]="productForm!" (ngSubmit)="onSubmit()">
+        <div class="flex flex-col md:flex-row gap-8">
+          <app-load-image-form [group]="imageGroup"></app-load-image-form>
+
+          <div class="md:w-2/3">
+            <!--
+            <div class="mb-4">
+              <label class="block mb-1">Nombre</label>
+              <input formControlName="name" class="input input-bordered w-full h-10 text-base" />
+            </div>
+            <div class="mb-4">
+              <label class="block mb-1">Precio</label>
+              <input formControlName="price" type="number" min="0" class="input input-bordered w-full h-10 text-base" />
+            </div>
+            <div class="mb-4">
+              <label class="block mb-1">Stock</label>
+              <input formControlName="stock" type="number" min="0" class="input input-bordered w-full h-10 text-base" />
+            </div>
+            <div class="mb-4">
+              <label class="block">Descripción</label>
+              <fieldset class="fieldset">
+                <legend class="fieldset-legend">Descripción del producto</legend>
+                <textarea class="textarea h-24 w-full text-base" formControlName="description" placeholder="Descripción"></textarea>
+                <div class="label">Opcional</div>
+              </fieldset>
+            </div>
+            <div class="mb-4">
+              <label class="block mb-1">Categoría</label>
+              <select formControlName="category" class="select select-bordered w-full h-24 text-base" multiple>
+                @for(cat of getCategories(); track cat) {
+                  <option [value]="cat">{{cat | capitalize}}</option>
+                }
+              </select>
+            </div>
+            -->
+            <!--
+            <app-product-description [form]="productForm"></app-product-description>
+            <app-product-discounts [form]="productForm"></app-product-discounts>
+            <app-product-taxes [form]="productForm"></app-product-taxes>-->
+            <button type="submit" class="btn btn-primary w-full mt-6">Guardar producto</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+} @placeholder {
+  <div class="flex items-center justify-center min-h-screen">
+    <div class="max-w-md w-full mx-auto p-8 bg-base-100 rounded shadow text-center">
+      <progress class="progress w-56 mb-4"></progress>
+      <p class="text-lg">Cargando formulario...</p>
+    </div>
+  </div>
+} @loading {
+  <div class="flex items-center justify-center min-h-screen">
+    <div class="max-w-md w-full mx-auto p-8 bg-base-100 rounded shadow text-center">
+      <progress class="progress w-56 mb-4"></progress>
+      <p class="text-lg">Preparando formulario...</p>
+    </div>
+  </div>
+} @error {
+  <div class="flex items-center justify-center min-h-screen">
+    <div class="max-w-md w-full mx-auto p-8 bg-error rounded shadow text-center">
+      <p class="text-lg text-error-content">Error al cargar el formulario. Intenta de nuevo.</p>
+    </div>
+  </div>
+}
+@if(formError()){
+  <div class="flex items-center justify-center min-h-screen">
+    <div class="max-w-md w-full mx-auto p-8 bg-error rounded shadow text-center">
+      <p class="text-lg text-error-content">Error al cargar el formulario. Intenta de nuevo.</p>
+    </div>
+  </div>
+}

@@ -1,6 +1,5 @@
-export type ModifierType = 'discount' | 'tax';
-export type TAX = 'IVA' | 'ISR' | 'IEPS';
-export type DISCOUNT = 'Seasonal' | 'Promotional' | 'Loyalty';
+import { ModifierType } from "../../shared/services/types/modifier.type";
+
 
 export interface InvoiceModifier {
   name: string;

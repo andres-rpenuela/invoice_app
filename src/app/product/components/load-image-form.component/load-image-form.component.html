@@ -1,0 +1,17 @@
+<div class="flex flex-col items-center justify-center gap-4 w-full">
+  <label class="block mb-2 text-lg font-semibold">Imagen</label>
+  <div class="avatar w-32 h-32 mb-4 relative">
+    @if(isLoadingImage()){
+      <div class="absolute inset-0 flex items-center justify-center bg-base-300 bg-opacity-70 rounded-full z-10">
+        <progress class="progress w-24"></progress>
+      </div>
+    }
+    @if(imagePreview() !== null && imagePreview() !== ''){
+      <img [src]="imagePreview()" alt="Vista previa" class="rounded-full object-cover w-full h-full" />
+    }
+    @if(imagePreview() === null || imagePreview() === ''){
+      <div class="bg-base-300 rounded-full w-full h-full flex items-center justify-center text-4xl text-base-content">?</div>
+    }
+  </div>
+  <input type="file" (change)="onFileChange($event)" class="file-input file-input-bordered w-full h-12" />
+</div>
