@@ -4,39 +4,17 @@
       <h1 class="text-2xl font-bold mb-8 text-center">Alta de producto</h1>
       <form [formGroup]="productForm!" (ngSubmit)="onSubmit()">
         <div class="flex flex-col md:flex-row gap-8">
-          <app-load-image-form [group]="imageGroup"></app-load-image-form>
+          <app-load-image-form [group]="imageGroup" [onDebug]="onDebug"></app-load-image-form>
 
           <div class="md:w-2/3">
-            <!--
-            <div class="mb-4">
-              <label class="block mb-1">Nombre</label>
-              <input formControlName="name" class="input input-bordered w-full h-10 text-base" />
-            </div>
-            <div class="mb-4">
-              <label class="block mb-1">Precio</label>
-              <input formControlName="price" type="number" min="0" class="input input-bordered w-full h-10 text-base" />
-            </div>
-            <div class="mb-4">
-              <label class="block mb-1">Stock</label>
-              <input formControlName="stock" type="number" min="0" class="input input-bordered w-full h-10 text-base" />
-            </div>
-            <div class="mb-4">
-              <label class="block">Descripción</label>
-              <fieldset class="fieldset">
-                <legend class="fieldset-legend">Descripción del producto</legend>
-                <textarea class="textarea h-24 w-full text-base" formControlName="description" placeholder="Descripción"></textarea>
-                <div class="label">Opcional</div>
-              </fieldset>
-            </div>
-            <div class="mb-4">
-              <label class="block mb-1">Categoría</label>
-              <select formControlName="category" class="select select-bordered w-full h-24 text-base" multiple>
-                @for(cat of getCategories(); track cat) {
-                  <option [value]="cat">{{cat | capitalize}}</option>
-                }
-              </select>
-            </div>
-            -->
+            <product-form-general-data [group]="dataGenericGroup" [onDebug]="onDebug"></product-form-general-data>
+
+              <!-- Debug: Mostrar valor actual del campo 'name' en el padre -->
+              @if( onDebug ){
+              <div class="mt-4 p-2 bg-base-200 rounded">
+                <strong>Valor actual (padre):</strong> {{ dataGenericGroup.get('name')?.value }}
+              </div>
+              }
             <!--
             <app-product-description [form]="productForm"></app-product-description>
             <app-product-discounts [form]="productForm"></app-product-discounts>
@@ -47,6 +25,9 @@
       </form>
     </div>
   </div>
+
+  Prueba
+  {{ productForm?.value | json }}
 } @placeholder {
   <div class="flex items-center justify-center min-h-screen">
     <div class="max-w-md w-full mx-auto p-8 bg-base-100 rounded shadow text-center">

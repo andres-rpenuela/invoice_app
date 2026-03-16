@@ -1,15 +1,20 @@
-import { ChangeDetectionStrategy, Component, input, signal } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { SlicePipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, Input, input, signal } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-load-image-form',
   standalone: true,
+  imports: [ReactiveFormsModule, SlicePipe],
   templateUrl: './load-image-form.component.html',
   styleUrl: './load-image-form.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoadImageFormComponent {
-  group = input.required<FormGroup>();
+  //group = input.required<FormGroup>();
+  @Input() group!: FormGroup;
+  @Input() onDebug!: Boolean;
+
   imagePreview = signal<string | null>(null);
   isLoadingImage = signal(false);
 
@@ -26,8 +31,8 @@ export class LoadImageFormComponent {
 
           // Usamos ?. para evitar el error si el control es null
           // y hacemos cast a FormControl para asegurar el acceso a .setValue()
-          (this.group().get('image') as FormControl)?.setValue(base64Image);
-
+          //(this.group().get('image') as FormControl)?.setValue(base64Image);
+          this.group.get('image')?.setValue(base64Image)
           this.isLoadingImage.set(false);
         }, 400);
       };
@@ -39,4 +44,5 @@ export class LoadImageFormComponent {
       this.isLoadingImage.set(false);
     }
   }
+
 }

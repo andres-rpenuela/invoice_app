@@ -1,20 +1,24 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { productCategories } from '../../../shared/data/product-categories.data';
 import { CapitalizePipe } from '../../../shared/pipes/capitalize.pipe';
 import { LoadImageFormComponent } from '../../components/load-image-form.component/load-image-form.component';
 import { signal } from '@angular/core';
+import { GeneralDataComponent } from '../../components/general-data/general-data.component';
+import { JsonPipe } from '@angular/common';
 
 
 @Component({
   selector: 'app-product-form.page.component',
-  imports: [ReactiveFormsModule, CapitalizePipe, LoadImageFormComponent],
+  imports: [ReactiveFormsModule, JsonPipe, LoadImageFormComponent, GeneralDataComponent],
   templateUrl: './product-form.page.component.html',
   styleUrl: './product-form.page.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductFormPageComponent implements OnInit{
+  onDebug = false
+
   productForm?: FormGroup;
   formError = signal(false);
   _dataGenericFormGroup?: FormGroup;
@@ -23,7 +27,7 @@ export class ProductFormPageComponent implements OnInit{
 
   ngOnInit(): void {
     this._dataGenericFormGroup = this.fb.group({
-        name: ['', Validators.required],
+        name: ['Andres', Validators.required],
         price: [0, [Validators.required, Validators.min(0)]],
         description: [''],
         stock: [0, [Validators.required, Validators.min(0)]],
@@ -64,6 +68,11 @@ export class ProductFormPageComponent implements OnInit{
   }
 
   get imageGroup(): FormGroup {
-return this.productForm?.get('imageGroup') as FormGroup;
-}
+    return this.productForm?.get('imageGroup') as FormGroup;
+  }
+
+  get dataGenericGroup(): FormGroup {
+    return this.productForm?.get('dataGenericGroup') as FormGroup;
+  }
+
 }
