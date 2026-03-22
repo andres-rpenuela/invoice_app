@@ -1,6 +1,6 @@
-import { SlicePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input, input, signal } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {SlicePipe} from '@angular/common';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, input, Output, signal} from '@angular/core';
+import {ReactiveFormsModule} from '@angular/forms';
 
 @Component({
   selector: 'app-load-image-form',
@@ -11,35 +11,40 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoadImageFormComponent {
-  //group = input.required<FormGroup>();
-  @Input() group!: FormGroup;
-  @Input() onDebug!: Boolean;
+  @Input() onDebug!: boolean;
+  @Output() base64Image = new EventEmitter<string>();
+
 
   imagePreview = signal<string | null>(null);
   isLoadingImage = signal(false);
 
   onFileChange(event: Event) {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
+
+    if (input && input.files && input.files[0]) {
       this.isLoadingImage.set(true);
+      console.log('Archivo seleccionado:', input.files[0]);
+
+      const file = input.files[0];
       const reader = new FileReader();
+
       reader.onload = (e: any) => {
         setTimeout(() => {
-           const base64Image = e.target.result;
-
-          this.imagePreview.set(base64Image);
-
-          // Usamos ?. para evitar el error si el control es null
-          // y hacemos cast a FormControl para asegurar el acceso a .setValue()
-          //(this.group().get('image') as FormControl)?.setValue(base64Image);
-          this.group.get('image')?.setValue(base64Image)
+          const content = e.target.result;
+          console.log('Contenido del archivo (base64):', content);
+          this.imagePreview.set(content);
+          this.base64Image.emit(content);
           this.isLoadingImage.set(false);
         }, 400);
       };
+
       reader.onerror = () => {
         this.isLoadingImage.set(false);
       };
-      reader.readAsDataURL(input.files[0]);
+
+
+      // Asignamos el file al reader antes de iniciar la lectura para evitar problemas de asincronía
+      reader.readAsDataURL(file);
     } else {
       this.isLoadingImage.set(false);
     }

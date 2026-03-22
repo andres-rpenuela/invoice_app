@@ -1,12 +1,12 @@
-import { ChangeDetectionStrategy, Component, input, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
-import { productCategories } from '../../../shared/data/product-categories.data';
-import { CapitalizePipe } from '../../../shared/pipes/capitalize.pipe';
-import { LoadImageFormComponent } from '../../components/load-image-form.component/load-image-form.component';
-import { signal } from '@angular/core';
-import { GeneralDataComponent } from '../../components/general-data/general-data.component';
-import { JsonPipe } from '@angular/common';
+import {ChangeDetectionStrategy, Component, input, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ReactiveFormsModule} from '@angular/forms';
+import {productCategories} from '../../../shared/data/product-categories.data';
+import {CapitalizePipe} from '../../../shared/pipes/capitalize.pipe';
+import {LoadImageFormComponent} from '../../components/load-image-form.component/load-image-form.component';
+import {signal} from '@angular/core';
+import {GeneralDataComponent} from '../../components/general-data/general-data.component';
+import {JsonPipe} from '@angular/common';
 
 
 @Component({
@@ -16,7 +16,7 @@ import { JsonPipe } from '@angular/common';
   styleUrl: './product-form.page.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProductFormPageComponent implements OnInit{
+export class ProductFormPageComponent implements OnInit {
   onDebug = true
 
   productForm?: FormGroup;
@@ -27,20 +27,20 @@ export class ProductFormPageComponent implements OnInit{
 
   ngOnInit(): void {
     this._dataGenericFormGroup = this.fb.group({
-        name: ['Andres', Validators.required],
-        price: [0, [Validators.required, Validators.min(0)]],
-        description: [''],
-        stock: [0, [Validators.required, Validators.min(0)]],
-        category: [[], Validators.required],
+      name: ['Andres', Validators.required],
+      price: [0, [Validators.required, Validators.min(0)]],
+      description: [''],
+      stock: [0, [Validators.required, Validators.min(0)]],
+      category: [[], Validators.required],
     });
 
     this._dataDiscountsTaxFormGroup = this.fb.group({
-        discounts: [0],
-        taxes: [0]
+      discounts: [0],
+      taxes: [0]
     })
 
     this._imageFormGroup = this.fb.group({
-      image:['']
+      image: ['']
     })
 
     this.productForm = this.fb.group({
@@ -62,8 +62,7 @@ export class ProductFormPageComponent implements OnInit{
   }
 
 
-
-  getCategories(){
+  getCategories() {
     return productCategories;
   }
 
@@ -75,4 +74,7 @@ export class ProductFormPageComponent implements OnInit{
     return this.productForm?.get('dataGenericGroup') as FormGroup;
   }
 
+  onImageChange(base64: string) {
+    this.productForm?.get('imageGroup.image')?.setValue(base64);
+  }
 }

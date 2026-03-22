@@ -4,17 +4,17 @@
       <h1 class="text-2xl font-bold mb-8 text-center">Alta de producto</h1>
       <form [formGroup]="productForm!" (ngSubmit)="onSubmit()">
         <div class="flex flex-col md:flex-row gap-8">
-          <app-load-image-form [group]="imageGroup" [onDebug]="onDebug"></app-load-image-form>
+          <app-load-image-form (base64Image)="onImageChange($event)" [onDebug]="onDebug"></app-load-image-form>
 
           <div class="md:w-2/3">
             <product-form-general-data [group]="dataGenericGroup" [onDebug]="onDebug"></product-form-general-data>
 
-              <!-- Debug: Mostrar valor actual del campo 'name' en el padre -->
-              @if( onDebug ){
+            <!-- Debug: Mostrar valor actual del campo 'name' en el padre -->
+            @if (onDebug) {
               <div class="mt-4 p-2 bg-base-200 rounded">
                 <strong>Valor actual (padre):</strong> {{ dataGenericGroup.get('name')?.value }}
               </div>
-              }
+            }
             <!--
             <app-product-description [form]="productForm"></app-product-description>
             <app-product-discounts [form]="productForm"></app-product-discounts>
@@ -23,10 +23,11 @@
           </div>
         </div>
       </form>
-      @if( onDebug ){
+      @if (onDebug) {
         <div class="mt-8 p-4 bg-base-200 rounded shadow max-h-[60vh] overflow-y-auto">
           <h2 class="font-bold mb-2">Debug Info</h2>
-          <pre class="text-sm w-full overflow-x-auto whitespace-pre-wrap break-all max-h-48 md:max-h-64  overflow-y-auto">
+          <pre
+            class="text-sm w-full overflow-x-auto whitespace-pre-wrap break-all max-h-48 md:max-h-64  overflow-y-auto">
             {{ productForm?.value | json }}
           </pre>
         </div>
@@ -54,7 +55,7 @@
     </div>
   </div>
 }
-@if(formError()){
+@if (formError()) {
   <div class="flex items-center justify-center min-h-screen">
     <div class="max-w-md w-full mx-auto p-8 bg-error rounded shadow text-center">
       <p class="text-lg text-error-content">Error al cargar el formulario. Intenta de nuevo.</p>
