@@ -17,7 +17,7 @@ import { JsonPipe } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductFormPageComponent implements OnInit{
-  onDebug = false
+  onDebug = true
 
   productForm?: FormGroup;
   formError = signal(false);
