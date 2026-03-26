@@ -1,0 +1,46 @@
+<!--
+<div class="mb-4">
+  <label class="block mb-1">{{ label }}</label>
+
+  <div class="relative">
+    <input
+      [value]="rawValue"
+      (input)="onInput($event)"
+      (blur)="onBlur()"
+      type="text"
+      inputmode="decimal"
+      class="input input-bordered w-full h-10 text-base pr-12"
+      [disabled]="isDisabled"
+    />
+
+    <span
+      class="absolute right-3 top-1/2 -translate-y-1/2 text-base text-gray-500"
+    >
+      {{ rawValue ?? '0' | decimalSeparator:locale:2:5 }}
+      @if( mode == 'currency' )
+      {{ locale | currencySymbol }}
+    </span>
+
+  </div>
+</div>
+-->
+
+<div class="mb-4">
+  <label class="block mb-1">{{ label() }}</label>
+
+  <div class="relative">
+    <input
+      #inputRef
+      (input)="onInput($event)"
+      (blur)="onBlur()"
+      type="text"
+      inputmode="decimal"
+      class="input input-bordered w-full h-10 text-base pr-16"
+      [disabled]="isDisabled"
+    />
+
+    <span class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
+       {{ displayValue() | decimalSeparator:locale():2:5 }} {{ getSuffix() }}
+    </span>
+  </div>
+</div>

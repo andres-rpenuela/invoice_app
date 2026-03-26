@@ -19,7 +19,17 @@
             <app-product-description [form]="productForm"></app-product-description>
             <app-product-discounts [form]="productForm"></app-product-discounts>
             <app-product-taxes [form]="productForm"></app-product-taxes>-->
-            <button type="submit" class="btn btn-primary w-full mt-6">Guardar producto</button>
+            <!-- <button type="submit" class="btn btn-primary w-full mt-6" [disable]="form.isvalid">Guardar producto</button> -->
+            <button type="submit"
+              class="btn btn-primary w-full mt-6"
+              [disabled]="productForm?.invalid">
+
+              @if (productForm?.pending) {
+                <span class="loading loading-spinner"></span>
+              }
+
+              Guardar producto
+            </button>
           </div>
         </div>
       </form>
