@@ -26,6 +26,7 @@ export class ProductFormPageComponent implements OnInit {
   _imageFormGroup?: FormGroup;
 
   ngOnInit(): void {
+    // estas reglas de validacion tiene mayor dominio que la del padre
     this._dataGenericFormGroup = this.fb.group({
       name: ['Andres', Validators.required],
       price: [0, [Validators.required, Validators.min(0)]],

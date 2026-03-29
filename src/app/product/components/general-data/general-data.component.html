@@ -25,8 +25,10 @@
     <form-input-numeric
       formControlName="price"
       label="Price"
-      mode="integer"
-      locale="en-US">
+      mode="percentage"
+      [maxDecimals]="1"
+      locale='en-US'
+      [min]='-100'>
     </form-input-numeric>
 
     <!-- <pre>{{ group.get('price')?.value }}</pre> -->

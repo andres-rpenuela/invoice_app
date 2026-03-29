@@ -3,52 +3,94 @@
 export class NumericHelper {
   static NAN = NaN;
 
-  static textToDecimal(val: any, locale: string): number | null {
-    if (val === null || val === undefined || val === '') return null;
+  static textToDecimal(input: string, idioma: string): number | null {
+    if (!input || typeof input !== 'string') return null;
 
-    let str = String(val).trim();
+    input = input.trim();
 
-    let isNegative = false;
-    if (str.startsWith('-')) {
-      isNegative = true;
-      str = str.slice(1);
+    // Detectar negativo
+    const isNegative = input.startsWith('-');
+    if (isNegative) {
+      input = input.substring(1);
     }
 
-    let parsedStr = '';
-    let isPartial = false;
+    const isSpanish = idioma?.toLowerCase().startsWith('es');
 
-    if (locale.startsWith('es')) {
-      // es-ES: miles = '.', decimal = ','
-      if (/^([0-9]{1,3}(\.[0-9]{3})*|[0-9]+)(,[0-9]*)?$/.test(str)) {
-        const parts = str.split(',');
-        const intPart = parts[0].replace(/\./g, '');
-        const decPart = parts[1] ?? '';
-        parsedStr = decPart ? `${intPart}.${decPart}` : intPart;
-        if (str.endsWith(',')) isPartial = true; // estado intermedio
-      } else {
-        return null; // completamente inválido
-      }
-    } else if (locale.startsWith('en')) {
-      // en-US: miles = ',', decimal = '.'
-      if (/^([0-9]{1,3}(,[0-9]{3})*|[0-9]+)(\.[0-9]*)?$/.test(str)) {
-        const parts = str.split('.');
-        const intPart = parts[0].replace(/,/g, '');
-        const decPart = parts[1] ?? '';
-        parsedStr = decPart ? `${intPart}.${decPart}` : intPart;
-        if (str.endsWith('.')) isPartial = true; // estado intermedio
-      } else {
-        return null;
-      }
+    let pattern: RegExp;
+
+    if (isSpanish) {
+      // Español: miles con . y decimales con ,
+      pattern = /^\d{1,3}(\.\d{3})*(,\d+)?$|^\d+(,\d+)?$/;
+
+      if (!pattern.test(input)) return null;
+
+      input = input.replace(/\./g, '').replace(',', '.');
     } else {
-      parsedStr = str.replace(/[^0-9.-]/g, '');
+      // Inglés: miles con , y decimales con .
+      pattern = /^\d{1,3}(,\d{3})*(\.\d+)?$|^\d+(\.\d+)?$/;
+
+      if (!pattern.test(input)) return null;
+
+      input = input.replace(/,/g, '');
     }
 
-    const num = parseFloat(parsedStr);
-    if (isNaN(num) || isPartial) {
-      // valor parcial: devuelve null pero mantiene el input
-      return null;
-    }
+    let result = Number(input);
 
-    return isNegative ? -num : num;
+    if (isNaN(result)) return null;
+
+    return isNegative ? -result : result;
   }
+
+  static textToInteger(input: string, idioma: string): number | null {
+    if (!input || typeof input !== 'string') return null;
+
+    input = input.trim();
+
+    const isNegative = input.startsWith('-');
+    if (isNegative) {
+      input = input.substring(1);
+    }
+
+    const isSpanish = idioma?.toLowerCase().startsWith('es');
+
+    let pattern: RegExp;
+
+    if (isSpanish) {
+      // SOLO enteros (sin decimales)
+      pattern = /^\d{1,3}(\.\d{3})*$|^\d+$/;
+
+      if (!pattern.test(input)) return null;
+
+      input = input.replace(/\./g, '');
+    } else {
+      pattern = /^\d{1,3}(,\d{3})*$|^\d+$/;
+
+      if (!pattern.test(input)) return null;
+
+      input = input.replace(/,/g, '');
+    }
+
+    let result = Number(input);
+
+    if (isNaN(result)) return null;
+
+    return isNegative ? -result : result;
+  }
+
+  static decimalToText(value: number, idioma: string, decimals?: number): string | null {
+    if (value === null || value === undefined || isNaN(value)) return null;
+
+    const isSpanish = idioma?.toLowerCase().startsWith('es');
+
+    const options: Intl.NumberFormatOptions = {
+      minimumFractionDigits: decimals ?? 0,
+      maximumFractionDigits: decimals ?? 20
+    };
+
+    const locale = isSpanish ? 'es-ES' : 'en-US';
+
+    return new Intl.NumberFormat(locale, options).format(value);
+  }
+
+
 }
