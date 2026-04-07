@@ -1,7 +1,10 @@
-<div class="mb-4">
-  <label class="block mb-1">{{ label() }}</label>
+<div class="mb-5 w-72">
+  <label class="block mb-1 text-sm font-medium text-gray-700">
+    {{ label() }}
+  </label>
 
-  <div class="flex items-center border border-gray-300 rounded h-10 overflow-hidden focus-within:ring-2 focus-within:ring-blue-500">
+  <div class="relative h-11 rounded-lg border border-gray-300 bg-white
+              focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500">
 
     <!-- INPUT -->
     <input
@@ -12,38 +15,40 @@
       (focus)="onFocus()"
       (keydown)="onKeyDown($event)"
       [attr.inputmode]="inputMode()"
-      class="flex-1 px-3 h-full outline-none"
       [disabled]="isDisabled"
+      class="w-full h-full px-3 pr-16 bg-transparent outline-none text-gray-900"
     />
 
-    <!-- DISPLAY FORMATEADO (solo cuando NO está en focus) -->
+    <!-- DISPLAY FORMATEADO (overlay elegante) -->
     @if (!isFocused()) {
-      <div class="px-2 text-gray-500 text-sm whitespace-nowrap">
+      <div class="absolute inset-y-0 right-10 flex items-center pr-2
+                  text-gray-400 text-sm pointer-events-none tabular-nums">
         {{ displayValue() | decimalSeparator:locale():2:maxDecimals() }}
       </div>
     }
 
     <!-- SUFFIX -->
     @if (getSuffix()) {
-      <div class="px-2 text-gray-500 text-sm whitespace-nowrap">
+      <div class="absolute inset-y-0 right-2 flex items-center
+                  text-gray-500 text-sm pointer-events-none">
         {{ getSuffix() }}
       </div>
     }
 
     <!-- STEP -->
     @if (mode() === 'step') {
-      <div class="flex flex-col border-l h-full">
+      <div class="absolute right-0 top-0 h-full w-6 flex flex-col border-l">
         <button
           type="button"
           (click)="increment()"
-          class="w-6 flex-1 text-xs flex items-center justify-center hover:bg-gray-100 active:bg-gray-200"
+          class="flex-1 text-[10px] text-gray-400 hover:bg-gray-100"
         >
           ▲
         </button>
         <button
           type="button"
           (click)="decrement()"
-          class="w-6 flex-1 text-xs flex items-center justify-center hover:bg-gray-100 active:bg-gray-200 border-t"
+          class="flex-1 text-[10px] text-gray-400 hover:bg-gray-100 border-t"
         >
           ▼
         </button>

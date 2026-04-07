@@ -333,11 +333,14 @@ onFocus() {
               this.onValidatorChange();
               return;
             }
-            cleaned = Math.floor(cleaned);
+            const decimals = this.maxDecimals();
+            cleaned = Math.round(cleaned * Math.pow(10, decimals)) / Math.pow(10, decimals);
+
             this.value.set(cleaned);
             if (emit) this.onChange(cleaned);
           } else {
-            cleaned = Math.floor(Number(raw));
+            const decimals = this.maxDecimals();
+            cleaned = Math.round( Number(raw) * Math.pow(10, decimals)) / Math.pow(10, decimals);
             this.value.set(cleaned);
             if (emit) this.onChange(cleaned);
           }
