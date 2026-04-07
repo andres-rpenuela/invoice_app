@@ -1,4 +1,3 @@
-import { DecimalPipe } from '@angular/common';
 import {
   Component,
   computed,
@@ -6,11 +5,11 @@ import {
   ElementRef,
   forwardRef,
   input,
-  Input,
   linkedSignal,
   signal,
   ViewChild
 } from '@angular/core';
+
 import {
   ControlValueAccessor,
   NG_VALUE_ACCESSOR,
@@ -18,21 +17,29 @@ import {
   ValidationErrors,
   AbstractControl
 } from '@angular/forms';
+
 import { DecimalSeparatorPipe } from '../../pipes/decimal-separator.pipe';
 import { NumericHelper } from '../../helpers/numeric.helper';
 
-export type ModeInputNumber = 'number' | 'currency' | 'integer' | 'percentage' | 'step';
-export class ModeInputNumberType{
-  static NUMBER : ModeInputNumber = 'number'
-  static CURRENCY : ModeInputNumber = 'currency'
-  static INTEGER : ModeInputNumber = 'integer'
-  static PERCENTAGE : ModeInputNumber= 'percentage'
-  static STEP : ModeInputNumber = 'step'
+export type ModeInputNumber =
+  | 'number'
+  | 'currency'
+  | 'integer'
+  | 'percentage'
+  | 'step';
 
+export class ModeInputNumberType {
+  static NUMBER: ModeInputNumber = 'number';
+  static CURRENCY: ModeInputNumber = 'currency';
+  static INTEGER: ModeInputNumber = 'integer';
+  static PERCENTAGE: ModeInputNumber = 'percentage';
+  static STEP: ModeInputNumber = 'step';
 }
+
 @Component({
   selector: 'form-input-numeric',
   templateUrl: './form-input-numeric.component.html',
+  imports: [DecimalSeparatorPipe],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -44,367 +51,292 @@ export class ModeInputNumberType{
       useExisting: forwardRef(() => FormInputNumericComponent),
       multi: true
     }
-  ],
-  imports: [DecimalSeparatorPipe]
+  ]
 })
 export class FormInputNumericComponent implements ControlValueAccessor {
-  // Inputs
+  // 🔹 Inputs
   label = input<string>('Control');
-  locale = input<string>(navigator.language)
+  locale = input<string>(navigator.language);
   min = input<number>();
   max = input<number>();
   maxDecimals = input<number>(2);
-  mode = input<ModeInputNumber>(ModeInputNumberType.NUMBER)
-  unit = input<string>()
-  stepInput = input<number|undefined>(undefined)
-
-  // Implementación de los TODOs:
-  // - Si mode es 'integer', solo acepta enteros
-  // - Si mode es 'percentage', acepta decimales
-  // - Si mode es 'currency', muestra símbolo de moneda
-  // - Si mode es 'number', acepta decimales
-  // - El step se ajusta según el modo
-  // - El sufijo se ajusta automáticamente
-
-  // Señal para step dinámico
-  step = computed(() => {
-  const mode = this.mode();
-
-    if (mode === ModeInputNumberType.STEP) {
-      const step = this.stepInput();
-      return step ?? Math.pow(10, -this.maxDecimals());
-    }
-
-    if (mode === ModeInputNumberType.INTEGER) {
-      return 1;
-    }
-
-    return 0.01;
-  });
-
-  // Señal para inputmode dinámico
-  inputMode = computed(() => {
-    if (this.mode() === ModeInputNumberType.INTEGER) return 'numeric';
-    if (this.mode() === ModeInputNumberType.STEP) {
-      return this.maxDecimals() > 0 ? 'decimal' : 'numeric';
-    }
-    return 'decimal';
-  });
-
-  // Métodos para incrementar/decrementar solo en modo step
-  increment() {
-  if (this.isDisabled || this.mode() !== ModeInputNumberType.STEP) return;
-
-  const val = Number(this.value() ?? 0);
-  const stepVal = Number(this.step());
-
-  this.updateValue(val + stepVal);
-}
-
-decrement() {
-  if (this.isDisabled || this.mode() !== ModeInputNumberType.STEP) return;
-
-  const val = Number(this.value() ?? 0);
-  const stepVal = Number(this.step());
-
-  this.updateValue(val - stepVal);
-}
-
-  // (La función onInput mejorada ya está más abajo, se elimina la duplicada de arriba)
+  mode = input<ModeInputNumber>(ModeInputNumberType.NUMBER);
+  unit = input<string>();
+  stepInput = input<number | undefined>(undefined);
 
   @ViewChild('inputRef') inputRef!: ElementRef<HTMLInputElement>;
 
-  //value: number | null = null;
-  //displayValue = '';
-  value = linkedSignal<number|null>( () => null)
-  raw = linkedSignal<string|null>( () => null );
-
-  // Mantiene lo que escribe el usuario
-  displayValue = computed<number|null>(() => {
-    const val = this.value();
-    return val !== null ? this.value()! : null;
-  });
-
-displayRaw = computed(() => {
-  const val = this.value();
-
-  if (val === null || val === undefined) return '';
-
-  // cuando está editando → raw
-  if (this.isFocused()) return String(val);
-
-  // cuando no → puedes formatear si quieres
-  return String(val);
-});
-
+  // 🔹 Estado
+  value = linkedSignal<number | null>(() => null);
   isDisabled = false;
+  isFocused = signal(false);
 
-  private error = signal<ValidationErrors | null>(null);
-  private _formatError: boolean = false;
+  private _formatError = false;
 
-  //
+  // 👉 necesario para el template
+  displayValue = computed<number | null>(() => this.value());
+
+  // 🔹 CVA
   private onChange = (v: number | null) => {};
   private onTouched = () => {};
   private onValidatorChange = () => {};
 
-constructor() {
-  effect(() => {
-    const input = this.inputRef?.nativeElement;
-    if (!input) return;
+  constructor() {
+    effect(() => {
+      const input = this.inputRef?.nativeElement;
+      if (!input) return;
 
-    const val = this.value();
+      if (document.activeElement === input) return;
 
-    // evita pisar mientras escribe
-    if (document.activeElement === input) return;
+      const val = this.value();
+      input.value = val == null ? '' : String(val);
+    });
+  }
 
-    input.value = val === null || val === undefined ? '' : String(val);
+  // =========================================================
+  // 🧠 PARSEO
+  // =========================================================
+  private parseByMode(raw: string): number | null {
+    let value = NumericHelper.textToDecimal(raw, this.locale());
+    if (value === null) return null;
+
+    switch (this.mode()) {
+      case ModeInputNumberType.INTEGER:
+        return Math.floor(value);
+
+      default:
+        return value;
+    }
+  }
+
+  // =========================================================
+  // 🧠 NORMALIZACIÓN
+  // =========================================================
+  private normalizeByMode(value: number | null): number | null {
+    if (value === null) return null;
+
+    let v = value;
+
+    if (this.mode() === ModeInputNumberType.INTEGER) {
+      v = Math.floor(v);
+    } else {
+      const factor = Math.pow(10, this.maxDecimals());
+      v = Math.round(v * factor) / factor;
+    }
+
+    if (this.mode() === ModeInputNumberType.PERCENTAGE) {
+      v = Math.max(0, Math.min(100, v));
+    }
+
+    const min = this.min();
+    const max = this.max();
+
+    if (min != null) v = Math.max(v, min);
+    if (max != null) v = Math.min(v, max);
+
+    return v;
+  }
+
+  // =========================================================
+  // 🔥 APPLY
+  // =========================================================
+  private applyValue(raw: string | number | null, emit: boolean = true): void {
+    let parsed: number | null;
+
+    if (typeof raw === 'number') parsed = raw;
+    else if (typeof raw === 'string') parsed = this.parseByMode(raw);
+    else parsed = null;
+
+    const normalized = this.normalizeByMode(parsed);
+
+    this.value.set(normalized);
+
+    if (emit) this.onChange(normalized);
+
+    this.onValidatorChange();
+  }
+
+  // =========================================================
+  // ⚙️ STEP
+  // =========================================================
+  step = computed(() => {
+    switch (this.mode()) {
+      case ModeInputNumberType.INTEGER:
+        return 1;
+
+      case ModeInputNumberType.STEP:
+        return this.stepInput() ?? Math.pow(10, -this.maxDecimals());
+
+      default:
+        return Math.pow(10, -this.maxDecimals());
+    }
   });
-}
 
-  isStrANumberValid(raw: string, mode: ModeInputNumber, locale: string): boolean {
-  if (mode === ModeInputNumberType.INTEGER) {
-    let thousandsSep = locale.includes('es') ? '.' : ',';
-    let decimalSep = locale.includes('es') ? ',' : '.';
+  increment() {
+    if (this.isDisabled || this.mode() !== ModeInputNumberType.STEP) return;
+    this.updateValue((this.value() ?? 0) + this.step());
+  }
 
-    // No debe tener separador decimal
-    if (raw.includes(decimalSep)) return false;
+  decrement() {
+    if (this.isDisabled || this.mode() !== ModeInputNumberType.STEP) return;
+    this.updateValue((this.value() ?? 0) - this.step());
+  }
 
-    // Permitir solo dígitos (sin separador de miles)
-    const plainInt = /^-?\d+$/;
-    // Permitir separador de miles correcto
-    const groupedInt = locale.includes('es')
-      ? /^-?\d{1,3}(\.\d{3})+$/
-      : /^-?\d{1,3}(,\d{3})+$/;
+  private updateValue(val: number) {
+    const normalized = this.normalizeByMode(val);
+    this.value.set(normalized);
+    this.onChange(normalized);
+  }
 
+  // =========================================================
+  // ⌨️ KEYBOARD
+  // =========================================================
+  onKeyDown(event: KeyboardEvent) {
+    if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      this.increment();
+    }
+
+    if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      this.decrement();
+    }
+  }
+
+  // =========================================================
+  // INPUT MODE
+  // =========================================================
+  inputMode = computed(() => {
+    switch (this.mode()) {
+      case ModeInputNumberType.INTEGER:
+        return 'numeric';
+
+      case ModeInputNumberType.STEP:
+        return this.maxDecimals() > 0 ? 'decimal' : 'numeric';
+
+      default:
+        return 'decimal';
+    }
+  });
+
+  // =========================================================
+  // VALIDACIÓN INPUT
+  // =========================================================
+  isStrANumberValid(raw: string): boolean {
     const trimmed = raw.trim();
-    return plainInt.test(trimmed) || groupedInt.test(trimmed);
+    if (!trimmed) return true;
+
+    const isES = this.locale().includes('es');
+
+    const decimalSep = isES ? ',' : '.';
+    const thousandSep = isES ? '.' : ',';
+
+    switch (this.mode()) {
+      case ModeInputNumberType.INTEGER: {
+        // 1.234 o 1,234
+        const regex = new RegExp(
+          `^-?\\d{1,3}(${this.escape(thousandSep)}\\d{3})*$|^-?\\d+$`
+        );
+        return regex.test(trimmed);
+      }
+
+      case ModeInputNumberType.NUMBER:
+      case ModeInputNumberType.CURRENCY:
+      case ModeInputNumberType.PERCENTAGE:
+      case ModeInputNumberType.STEP: {
+        // 1.234,56 o 1,234.56
+        const regex = new RegExp(
+          `^-?\\d{1,3}(${this.escape(thousandSep)}\\d{3})*(${this.escape(decimalSep)}\\d*)?$|^-?\\d*(${this.escape(decimalSep)}\\d*)?$`
+        );
+        return regex.test(trimmed);
+      }
+
+      default:
+        return true;
+    }
   }
-  // Otros modos...
-  return true;
-}
 
-onKeyDown(event: KeyboardEvent) {
-  if (event.key === 'ArrowUp') {
-    event.preventDefault();
-    this.increment();
+  private escape(char: string): string {
+    return char.replace('.', '\\.');
   }
 
-  if (event.key === 'ArrowDown') {
-    event.preventDefault();
-    this.decrement();
-  }
-}
- updateValue(val: number) {
-  const decimals = this.maxDecimals();
-  const factor = Math.pow(10, decimals);
-
-  let rounded = Math.round(val * factor) / factor;
-
-  if (this.min() != null) {
-    rounded = Math.max(rounded, this.min()!);
-  }
-
-  if (this.max() != null) {
-    rounded = Math.min(rounded, this.max()!);
-  }
-
-  this.inputRef!.nativeElement.value = String(rounded);
-  this.value.set(rounded);
-  this.onChange(rounded);
-}
-
-isFocused = signal(false);
-
-onFocus() {
-  this.isFocused.set(true);
-}
-
-
-
-  // 🔥 INPUT PRINCIPAL
   onInput(event: Event) {
     const input = event.target as HTMLInputElement;
-    let raw = input.value;
+    const raw = input.value;
 
-    let valid = this.isStrANumberValid (raw, this.mode(),this.locale() );
-
-    if( !valid){
-      console.log('Number not valid')
-      return
-    }
-
-    if( this.locale().includes('es')){
-      raw.replaceAll(',','')
-    }else{
-      raw.replaceAll('.','')
-    }
-    const isIntegerMode = this.mode() === ModeInputNumberType.INTEGER;
-    const hasComma = raw.includes(',');
-
-    /*
-    if (isIntegerMode && hasComma) {
+    if (!this.isStrANumberValid(raw)) {
       this._formatError = true;
-      this.error.set({ format: true });
-      this.onValidatorChange(); // importante
-      this.applyValue(null)
+      this.onValidatorChange();
       return;
-    } else {
-      this._formatError = false;
     }
 
-    if (
-      (this.mode() === ModeInputNumberType.STEP ||
-      this.mode() === ModeInputNumberType.PERCENTAGE) &&
-      this.maxDecimals() === 0
-    ) {
-      raw = raw.replace(/[^\d-]/g, '');
-    }
-
+    this._formatError = false;
     this.applyValue(raw);
-    */
-   this.applyValue(raw);
   }
 
-  // 👉 suffix
+  // =========================================================
+  // SUFFIX
+  // =========================================================
   getSuffix(): string {
-    if (this.mode() === ModeInputNumberType.CURRENCY) {
-      return new Intl.NumberFormat(this.locale(), {
-        style: 'currency',
-        currency: this.locale().includes('en') ? 'USD' : 'EUR'
-      }).formatToParts(0).find(p => p.type === 'currency')?.value || '$';
+    switch (this.mode()) {
+      case ModeInputNumberType.CURRENCY:
+        return new Intl.NumberFormat(this.locale(), {
+          style: 'currency',
+          currency: this.locale().includes('en') ? 'USD' : 'EUR'
+        })
+          .formatToParts(0)
+          .find(p => p.type === 'currency')?.value || '€';
+
+      case ModeInputNumberType.PERCENTAGE:
+        return '%';
+
+      case ModeInputNumberType.INTEGER:
+        return '';
+
+      default:
+        return this.unit() ?? '';
     }
-
-    if (this.mode() === ModeInputNumberType.INTEGER) return '';
-
-    if (this.mode() === ModeInputNumberType.PERCENTAGE) return '%';
-
-    return this.unit() ?? '';
   }
 
-  // 👉 VALIDATOR
+  // =========================================================
+  // VALIDATOR
+  // =========================================================
   validate(control: AbstractControl): ValidationErrors | null {
-    const rawValue = control.value;
+    const value = control.value;
 
-    // Error de formato detectado en onInput
-    if (this._formatError) {
-      return { format: true };
+    if (this._formatError) return { format: true };
+    if (value == null) return { required: true };
+    if (typeof value !== 'number' || isNaN(value)) return { format: true };
+
+    const min = this.min();
+    const max = this.max();
+
+    if (min != null && value < min) {
+      return { min: { min, actual: value } };
     }
 
-    // Requerido
-    if (rawValue === null || rawValue === undefined) {
-      return { required: true };
-    }
-
-    // ❌ Formato inválido
-    if (typeof rawValue !== 'number' || isNaN(rawValue)) {
-      return { format: true };
-    }
-
-    // Min
-    if (this.min() !== undefined && rawValue < this.min()!) {
-      return { min: { min: this.min(), actual: rawValue } };
-    }
-
-    // Max
-    if (this.max() !== undefined && rawValue > this.max()!) {
-      return { max: { max: this.max(), actual: rawValue } };
+    if (max != null && value > max) {
+      return { max: { max, actual: value } };
     }
 
     return null;
   }
 
-  private applyValue(raw: string | number | null, emit: boolean = true): void {
-        let cleaned: number | null;
-        if(this.mode() === ModeInputNumberType.STEP ){
-          const value = Number(raw);
-          const decimals = this.maxDecimals();
-
-          const rounded =
-            Math.round(value * Math.pow(10, decimals)) / Math.pow(10, decimals);
-
-          this.value.set(rounded);
-          if (emit) this.onChange(rounded);
-        }else{
-          if (typeof raw === 'string') {
-            cleaned = NumericHelper.textToDecimal(raw, this.locale());
-            if (cleaned === null) {
-              this.value.set(null);
-              if (emit) this.onChange(null);
-              this.onValidatorChange();
-              return;
-            }
-            const decimals = this.maxDecimals();
-            cleaned = Math.round(cleaned * Math.pow(10, decimals)) / Math.pow(10, decimals);
-
-            this.value.set(cleaned);
-            if (emit) this.onChange(cleaned);
-          } else {
-            const decimals = this.maxDecimals();
-            cleaned = Math.round( Number(raw) * Math.pow(10, decimals)) / Math.pow(10, decimals);
-            this.value.set(cleaned);
-            if (emit) this.onChange(cleaned);
-          }
-        }
-
-        this.onValidatorChange();
-    /*
-  if (raw === null || raw === undefined || raw === '') {
-    this.value.set(null);
-    if (emit) this.onChange(null);
-    this.onValidatorChange();
-    return;
-  }
-
-  let cleaned: number | null;
-
-  if (typeof raw === 'number') {
-    cleaned = raw;
-  } else {
-    cleaned = NumericHelper.textToDecimal(raw, this.locale());
-
-    if (cleaned === null) {
-      this.value.set(null);
-      if (emit) this.onChange(null);
-      this.onValidatorChange();
-      return;
-    }
-  }
-
-  // MODE INTEGER
-  if (this.mode() === ModeInputNumberType.INTEGER) {
-    cleaned = Math.floor(cleaned);
-  }
-
-  // STEP / PERCENTAGE sin decimales
-  if (
-    (this.mode() === ModeInputNumberType.STEP ||
-     this.mode() === ModeInputNumberType.PERCENTAGE) &&
-    this.maxDecimals() === 0
-  ) {
-    cleaned = Math.floor(cleaned);
-  }
-
-  this.value.set(cleaned);
-
-  if (emit) {
-    this.onChange(cleaned);
-  }
-
-  this.onValidatorChange();*/
-}
-  // 👉 CVA
+  // =========================================================
+  // CVA
+  // =========================================================
   writeValue(value: number | null): void {
-  this.value.set(value);
+    this.value.set(value);
 
-  queueMicrotask(() => {
-    const input = this.inputRef?.nativeElement;
-    if (!input) return;
+    queueMicrotask(() => {
+      const input = this.inputRef?.nativeElement;
+      if (!input) return;
 
-    if (document.activeElement !== input) {
-      input.value = value === null ? '' : String(value);
-    }
-  });
-}
+      if (document.activeElement !== input) {
+        input.value = value == null ? '' : String(value);
+      }
+    });
+  }
 
   registerOnChange(fn: any): void {
     this.onChange = fn;
@@ -414,12 +346,19 @@ onFocus() {
     this.onTouched = fn;
   }
 
+  registerOnValidatorChange(fn: () => void): void {
+    this.onValidatorChange = fn;
+  }
+
   setDisabledState(isDisabled: boolean): void {
     this.isDisabled = isDisabled;
   }
 
-  registerOnValidatorChange(fn: () => void): void {
-    this.onValidatorChange = fn;
+  // =========================================================
+  // FOCUS
+  // =========================================================
+  onFocus() {
+    this.isFocused.set(true);
   }
 
   onBlur() {
@@ -429,48 +368,6 @@ onFocus() {
     const input = this.inputRef?.nativeElement;
     if (!input) return;
 
-    const raw = input.value;
-
-    this.applyValue(raw);
+    this.applyValue(input.value);
   }
 }
-/*
-// 💰 Precio
-<form-input-numeric
-  formControlName="price"
-  label="Price"
-  mode="currency"
-  [min]="0"
-  locale="en-US">
-</form-input-numeric>
-
-// 📦 Unidad
-<form-input-numeric
-  formControlName="stock"
-  label="Stock"
-  mode="integer"
-  [min]="0">
-</form-input-numeric>
-
-// 📊 Porcentaje
-<form-input-numeric
-  formControlName="discount"
-  label="Discount"
-  [min]="0"
-  [max]="100"
-  [maxDecimals]="2">
-</form-input-numeric>
-
-// 🎨 Ajustes visuales (opcional)
-<input
-  type="number"
-  [step]="step"
-  ...
-/>
-
-//
-this.fb.group({
-  price: [0],
-  stock: [0]
-});
-*/

@@ -1,10 +1,20 @@
-<div class="mb-5 w-72">
-  <label class="block mb-1 text-sm font-medium text-gray-700">
+<div class="mb-5 w-full max-w-sm">
+  <label class="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-300">
     {{ label() }}
   </label>
 
-  <div class="relative h-11 rounded-lg border border-gray-300 bg-white
-              focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500">
+  <div
+    class="relative h-11 rounded-xl bg-white dark:bg-gray-900
+           border border-gray-200 dark:border-gray-800
+           shadow-sm
+           transition-all duration-200 ease-in-out
+
+           focus-within:border-blue-500
+           focus-within:shadow-[0_0_0_3px_rgba(59,130,246,0.15)]
+
+           dark:focus-within:border-blue-400
+           dark:focus-within:shadow-[0_0_0_3px_rgba(59,130,246,0.25)]"
+  >
 
     <!-- INPUT -->
     <input
@@ -16,13 +26,15 @@
       (keydown)="onKeyDown($event)"
       [attr.inputmode]="inputMode()"
       [disabled]="isDisabled"
-      class="w-full h-full px-3 pr-16 bg-transparent outline-none text-gray-900"
+      class="w-full h-full px-3 pr-16 bg-transparent outline-none
+             text-gray-900 dark:text-gray-100"
     />
 
-    <!-- DISPLAY FORMATEADO (overlay elegante) -->
+    <!-- DISPLAY -->
     @if (!isFocused()) {
       <div class="absolute inset-y-0 right-10 flex items-center pr-2
-                  text-gray-400 text-sm pointer-events-none tabular-nums">
+                  text-gray-400 text-sm tabular-nums pointer-events-none
+                  dark:text-gray-500">
         {{ displayValue() | decimalSeparator:locale():2:maxDecimals() }}
       </div>
     }
@@ -30,28 +42,37 @@
     <!-- SUFFIX -->
     @if (getSuffix()) {
       <div class="absolute inset-y-0 right-2 flex items-center
-                  text-gray-500 text-sm pointer-events-none">
+                  text-gray-500 text-sm pointer-events-none
+                  dark:text-gray-400">
         {{ getSuffix() }}
       </div>
     }
 
     <!-- STEP -->
     @if (mode() === 'step') {
-      <div class="absolute right-0 top-0 h-full w-6 flex flex-col border-l">
+      <div class="absolute right-0 top-0 h-full w-6 flex flex-col
+                  border-l border-gray-200 dark:border-gray-800">
+
         <button
           type="button"
           (click)="increment()"
-          class="flex-1 text-[10px] text-gray-400 hover:bg-gray-100"
-        >
+          class="flex-1 text-[10px] text-gray-400
+                 hover:bg-gray-100 active:bg-gray-200
+                 dark:text-gray-500 dark:hover:bg-gray-800 dark:active:bg-gray-700">
           ▲
         </button>
+
         <button
           type="button"
           (click)="decrement()"
-          class="flex-1 text-[10px] text-gray-400 hover:bg-gray-100 border-t"
-        >
+          class="flex-1 text-[10px] text-gray-400 border-t
+                 border-gray-200
+                 hover:bg-gray-100 active:bg-gray-200
+                 dark:border-gray-800 dark:text-gray-500
+                 dark:hover:bg-gray-800 dark:active:bg-gray-700">
           ▼
         </button>
+
       </div>
     }
 

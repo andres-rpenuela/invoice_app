@@ -25,9 +25,9 @@
     <form-input-numeric
       formControlName="price"
       label="Price"
-      mode="integer"
-      [maxDecimals]="1"
-      locale='en-US'
+      mode="number"
+      [maxDecimals]="2"
+      locale='es-ES'
       [min]='-100'>
     </form-input-numeric>
 
@@ -55,6 +55,9 @@
             </span>
           }
 
+          @if (control?.errors?.['format']) {
+            <span>Dato no valido</span>
+          }
         </div>
       </div>
     }
