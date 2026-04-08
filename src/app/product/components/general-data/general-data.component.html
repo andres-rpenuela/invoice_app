@@ -29,12 +29,17 @@
     <form-input-numeric
       formControlName="price"
       label="Price"
-      mode="step"
+      mode="currency"
       [maxDecimals]="2"
       locale="es-ES"
       [min]="-100"
-      [disable]="true"
-      [status]="control?.errors ? 'error' : 'default'">
+      [disable]="false"
+      [status]="control?.errors ? 'error' : 'default'"
+      [containerClass]="{
+        'w-full': true,
+        'border-purple-500': true
+      }"
+      >
     </form-input-numeric>
 
 

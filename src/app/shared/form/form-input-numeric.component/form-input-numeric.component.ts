@@ -65,6 +65,7 @@ export class FormInputNumericComponent implements ControlValueAccessor {
   unit = input<string>();
   stepInput = input<number | undefined>(undefined);
   disable = input<boolean>(false)
+  containerClass = input<string | Record<string, boolean>>('');
 
   // Inputs de sitlos
   status = input<'default' | 'error' | 'success'>('default');
@@ -85,6 +86,18 @@ export class FormInputNumericComponent implements ControlValueAccessor {
   isDisabled = computed(() =>
     this.isDisabledCva() || this.disable()
   );
+
+  mergedClasses = computed(() => {
+    const base = this.classes();
+    const extra = this.containerClass();
+
+    // convierter a record
+    if (typeof extra === 'string') {
+      return [base, extra];
+    }
+
+    return { ...base, ...(extra || {}) };
+  });
 
   // 🔹 CVA
   private onChange = (v: number | null) => {};
