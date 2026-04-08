@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component, Input, input, OnInit, OnDestroy, signal, effect } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { JsonPipe } from '@angular/common';
+import { JsonPipe, NgClass } from '@angular/common';
 import { FormInputNumericComponent } from '../../../shared/form/form-input-numeric.component/form-input-numeric.component';
 
 export type LANGUAGE = 'es-ES' | 'en-US'
 
 @Component({
   selector: 'product-form-general-data',
-  imports: [ReactiveFormsModule, JsonPipe, FormInputNumericComponent  ],
+  imports: [ReactiveFormsModule, JsonPipe, FormInputNumericComponent, NgClass  ],
   templateUrl: './general-data.component.html',
   styleUrl: './general-data.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

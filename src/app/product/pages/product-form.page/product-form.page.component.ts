@@ -30,7 +30,7 @@ export class ProductFormPageComponent implements OnInit {
     this._dataGenericFormGroup = this.fb.group({
       name: ['Andres', Validators.required],
       price: [0, [Validators.required, Validators.min(0)]],
-      description: [''],
+      description: ['',Validators.maxLength(500)],
       stock: [0, [Validators.required, Validators.min(0)]],
       category: [[], Validators.required],
     });

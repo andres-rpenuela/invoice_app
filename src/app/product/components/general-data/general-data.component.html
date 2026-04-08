@@ -1,111 +1,80 @@
+<div [formGroup]="group">
+  <div class="mb-4">
+    <label class="block mb-1">Nombre</label>
+    <input formControlName="name" class="input input-bordered w-full h-10 text-base" />
+  </div>
 
-  <div [formGroup]="group">
-    <div class="mb-4">
-      <label class="block mb-1">Nombre</label>
-      <input formControlName="name" class="input input-bordered w-full h-10 text-base" />
-    </div>
+  <div class="mb-4">
+    @let controlPrice = group.get('price');
 
-    <div class="mb-4">
-      <!--
-      <label class="block mb-1">Price</label>
-      <div class="relative">
-         <input
-           (input)="onPriceInput($event.target.value)"
-           type="text"
-           inputmode="decimal"
-           step="any"
-           min="0"
-           class="input input-bordered w-full h-10 text-base pr-12" />
-        <span class="absolute right-3 top-1/2 -translate-y-1/2 text-base text-gray-500">
-          {{ priceInput() | decimalSeparator:locale }} {{ locale | currencySymbol }}
-        </span>
-      </div>
-    </div>-->
-
-    <!-- <pre>{{ group.get('price')?.value }}</pre> -->
-    <!-- {{ group.get('price')?.errors | json }} -->
-    @let control = group.get('price');
-
-    <form-input-numeric
-      formControlName="price"
-      label="Price"
-      mode="currency"
-      [maxDecimals]="2"
-      locale="es-ES"
-      [min]="-100"
-      [disable]="false"
-      [status]="control?.errors ? 'error' : 'default'"
-      [containerClass]="{
+    <form-input-numeric formControlName="price" label="Price" mode="currency" [maxDecimals]="2" locale="es-ES"
+      [min]="-100" [disable]="false" [status]="controlPrice?.errors ? 'error' : 'default'" [containerClass]="{
         'w-full': true,
         'border-purple-500': true
-      }"
-      >
+      }">
     </form-input-numeric>
 
 
-    @if (control?.errors && control?.dirty) {
-      <div class="mt-2 alert alert-error shadow-sm p-3 text-sm">
-        <div class="flex flex-col gap-1">
+    @if (controlPrice?.errors && controlPrice?.dirty) {
+    <div class="mt-2 alert alert-error shadow-sm p-3 text-sm">
+      <div class="flex flex-col gap-1">
 
-          @if (control?.errors?.['required']) {
-            <span>El campo es obligatorio</span>
-          }
+        @if (controlPrice?.errors?.['required']) {
+        <span>El campo es obligatorio</span>
+        }
 
-          @if (control?.errors?.['min']) {
-            <span>
-              El mínimo es {{ control?.errors?.['min']?.min }}
-            </span>
-          }
+        @if (controlPrice?.errors?.['min']) {
+        <span>
+          El mínimo es {{ controlPrice?.errors?.['min']?.min }}
+        </span>
+        }
 
-          @if (control?.errors?.['max']) {
-            <span>
-              El máximo es {{ control?.errors?.['max']?.max }}
-            </span>
-          }
+        @if (controlPrice?.errors?.['max']) {
+        <span>
+          El máximo es {{ controlPrice?.errors?.['max']?.max }}
+        </span>
+        }
 
-          @if (control?.errors?.['format']) {
-            <span>Dato no valido</span>
-          }
-        </div>
+        @if (controlPrice?.errors?.['format']) {
+        <span>Dato no valido</span>
+        }
       </div>
+    </div>
     }
-
   </div>
+
+  <div class="card bg-base-100 border border-base-300 p-4">
+    @let controlDescription = group.get('description');
+
+    <div class="font-medium mb-2">Descripción</div>
+
+    <textarea formControlName="description" rows="3" placeholder="Describe el producto..." class="textarea w-full transition-all duration-200
+           focus:outline-none focus:ring-2 focus:ring-primary" [ngClass]="{
+      'border border-red-500 focus:ring-red-400': controlDescription?.errors && controlDescription?.dirty,
+      'border border-base-300': !controlDescription?.errors
+    }"></textarea>
+
+    <!-- contador -->
+    <div class="text-right text-xs opacity-50 mt-2">
+      {{ controlDescription?.value?.length || 0 }}/500
+    </div>
+
+    <!-- error -->
+    @if (controlDescription?.errors && controlDescription?.dirty) {
+    <div class="mt-2 text-sm text-red-500 flex items-center gap-2">
+      ⚠ Máximo 500 caracteres
+    </div>
+    }
+  </div>
+
 
   <!-- Debug: Mostrar valor actual del campo 'name' -->
   @if( onDebug ){
-    <div class="mt-2 p-2 bg-base-200 rounded">
-      <strong>Valor actual (hijo):</strong>
-        <pre>Name: {{ group.get('name')?.value }} </pre>
-        <pre>Price (crude): {{ group.get('price')?.value }}</pre>
-        <pre>Price (errors): {{ group.get('price')?.errors | json }}</pre>
-    </div>
+  <div class="mt-2 p-2 bg-base-200 rounded">
+    <strong>Valor actual (hijo):</strong>
+    <pre>Name: {{ group.get('name')?.value }} </pre>
+    <pre>Price (crude): {{ group.get('price')?.value }}</pre>
+    <pre>Price (errors): {{ group.get('price')?.errors | json }}</pre>
+    <pre>Deriptionc (errors): {{ group.get('description')?.errors | json }}</pre>
+  </div>
   }
-
-<!---
-<div class="mb-4">
-  <label class="block mb-1">Precio</label>
-  <input formControlName="price" type="number" min="0" class="input input-bordered w-full h-10 text-base" />
-</div>
-<div class="mb-4">
-  <label class="block mb-1">Stock</label>
-  <input formControlName="stock" type="number" min="0" class="input input-bordered w-full h-10 text-base" />
-</div>
-<div class="mb-4">
-  <label class="block">Descripción</label>
-  <fieldset class="fieldset">
-    <legend class="fieldset-legend">Descripción del producto</legend>
-    <textarea class="textarea h-24 w-full text-base" formControlName="description" placeholder="Descripción"></textarea>
-    <div class="label">Opcional</div>
-  </fieldset>
-</div>
-<div class="mb-4">
-  <label class="block mb-1">Categoría</label>
-  <select formControlName="category" class="select select-bordered w-full h-24 text-base" multiple>
-    @for(cat of getCategories(); track cat) {
-    <option [value]="cat">{{cat | capitalize}}</option>
-    }
-  </select>
-
-</div>
--->
