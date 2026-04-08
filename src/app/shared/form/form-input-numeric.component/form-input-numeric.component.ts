@@ -20,6 +20,7 @@ import {
 
 import { DecimalSeparatorPipe } from '../../pipes/decimal-separator.pipe';
 import { NumericHelper } from '../../helpers/numeric.helper';
+import { NgClass } from '@angular/common';
 
 export type ModeInputNumber =
   | 'number'
@@ -39,7 +40,7 @@ export class ModeInputNumberType {
 @Component({
   selector: 'form-input-numeric',
   templateUrl: './form-input-numeric.component.html',
-  imports: [DecimalSeparatorPipe],
+  imports: [DecimalSeparatorPipe,NgClass],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -63,18 +64,27 @@ export class FormInputNumericComponent implements ControlValueAccessor {
   mode = input<ModeInputNumber>(ModeInputNumberType.NUMBER);
   unit = input<string>();
   stepInput = input<number | undefined>(undefined);
+  disable = input<boolean>(false)
 
+  // Inputs de sitlos
+  status = input<'default' | 'error' | 'success'>('default');
+
+  // Elementos hmtl
   @ViewChild('inputRef') inputRef!: ElementRef<HTMLInputElement>;
 
   // 🔹 Estado
   value = linkedSignal<number | null>(() => null);
-  isDisabled = false;
+  isDisabledCva = signal(false);
   isFocused = signal(false);
 
   private _formatError = false;
 
   // 👉 necesario para el template
   displayValue = computed<number | null>(() => this.value());
+
+  isDisabled = computed(() =>
+    this.isDisabledCva() || this.disable()
+  );
 
   // 🔹 CVA
   private onChange = (v: number | null) => {};
@@ -92,6 +102,17 @@ export class FormInputNumericComponent implements ControlValueAccessor {
       input.value = val == null ? '' : String(val);
     });
   }
+
+  classes = computed(() => ({
+    'opacity-50 cursor-not-allowed': this.isDisabled(),
+
+    'border-red-500 dark:border-red-400':
+      this.status() === 'error',
+
+    'border-green-500 dark:border-green-400':
+      this.status() === 'success'
+  }));
+
 
   // =========================================================
   // 🧠 PARSEO
@@ -173,17 +194,23 @@ export class FormInputNumericComponent implements ControlValueAccessor {
   });
 
   increment() {
-    if (this.isDisabled || this.mode() !== ModeInputNumberType.STEP) return;
-    this.updateValue((this.value() ?? 0) + this.step());
+    if (this.isDisabled() || this.mode() !== ModeInputNumberType.STEP) return;
+
+    const newValue = (this.value() ?? 0) + this.step();
+    this.updateValue(newValue);
   }
 
   decrement() {
-    if (this.isDisabled || this.mode() !== ModeInputNumberType.STEP) return;
-    this.updateValue((this.value() ?? 0) - this.step());
+    if (this.isDisabled() || this.mode() !== ModeInputNumberType.STEP) return;
+
+    const newValue = (this.value() ?? 0) - this.step();
+    this.updateValue(newValue);
+
   }
 
   private updateValue(val: number) {
     const normalized = this.normalizeByMode(val);
+    this.inputRef.nativeElement.value = String(normalized);
     this.value.set(normalized);
     this.onChange(normalized);
   }
@@ -351,7 +378,7 @@ export class FormInputNumericComponent implements ControlValueAccessor {
   }
 
   setDisabledState(isDisabled: boolean): void {
-    this.isDisabled = isDisabled;
+    this.isDisabledCva.set(isDisabled);
   }
 
   // =========================================================

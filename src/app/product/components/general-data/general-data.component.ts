@@ -41,7 +41,8 @@ export class GeneralDataComponent implements OnInit, OnDestroy {
   debug() {
     console.log('Valor actual:', this.group.get('name')?.value);
   }
-/*
+
+  /*
   getErrorMessage(control: AbstractControl | null): string[] {
   if (!control?.errors) return [];
 

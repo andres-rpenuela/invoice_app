@@ -22,18 +22,21 @@
       </div>
     </div>-->
 
-    <form-input-numeric
-      formControlName="price"
-      label="Price"
-      mode="number"
-      [maxDecimals]="2"
-      locale='es-ES'
-      [min]='-100'>
-    </form-input-numeric>
-
     <!-- <pre>{{ group.get('price')?.value }}</pre> -->
     <!-- {{ group.get('price')?.errors | json }} -->
     @let control = group.get('price');
+
+    <form-input-numeric
+      formControlName="price"
+      label="Price"
+      mode="step"
+      [maxDecimals]="2"
+      locale="es-ES"
+      [min]="-100"
+      [disable]="true"
+      [status]="control?.errors ? 'error' : 'default'">
+    </form-input-numeric>
+
 
     @if (control?.errors && control?.dirty) {
       <div class="mt-2 alert alert-error shadow-sm p-3 text-sm">
