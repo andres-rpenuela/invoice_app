@@ -74,7 +74,8 @@ npm cache verify
 
 ----
 
-Para los test del proeycto, instalar:
+##  Test 
+Para los test del proyecto, instalar:
 
 ```bash
 # Instalar Playwright como dependencia de desarrollo
@@ -116,3 +117,74 @@ npm install -g @angular/cli
 Puedes hacer:
 ```
 npx @angular/cli new proyecto
+```
+
+---
+
+## TipTap
+
+```
+npm install @tiptap/core @tiptap/starter-kit
+npm install @tiptap/extension-placeholder @tiptap/extension-underline
+npm install @tiptap/extension-bubble-menu
+npm install @tiptap/extension-underline
+npm install @tiptap/extension-task-list @tiptap/extension-task-item
+npm install @tiptap/extension-link @tiptap/extension-mention
+npm install emoji-picker-element
+npm install @tiptap/extension-emoji
+```
+Para visualizar los items:
+
+```
+npm install @tailwindcss/typography
+```
+
+
+En el css general:
+```
+@plugin "@tailwindcss/typography";
+```
+
+En el componente:
+```
+<div class="prose max-w-none" #editorEl></div>
+```
+
+⚠️ COSAS IMPORTANTES (muy reales en proyectos Angular)
+1. TipTap guarda HTML
+
+Tu description ahora será:
+```
+<p>Texto <strong>bold</strong></p>
+```
+👉 Si necesitas texto plano:
+
+```
+editor.getText()
+```
+
+2. Validación de longitud (IMPORTANTE)
+
+Angular valida HTML completo, no texto visible.
+
+👉 Solución:
+```
+Validators.maxLength(500)
+```
+
+NO es suficiente.
+
+Mejor:
+```
+const text = editor.getText();
+```
+y validas eso manualmente.
+
+3. Sanitización
+
+Si lo muestras en UI:
+```
+<div [innerHTML]="value"></div>
+```
+👉 usa DomSanitizer si es contenido externo.
+

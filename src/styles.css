@@ -8,6 +8,8 @@
    themes: winter --default, night --prefersdark;
 }
 
+@plugin "@tailwindcss/typography";
+
 @custom-variant dark (&:where([data-theme=night], [data-theme=night] *));
 
 

@@ -47,12 +47,15 @@
     @let controlDescription = group.get('description');
 
     <div class="font-medium mb-2">Descripción</div>
-
+    <!--
     <textarea formControlName="description" rows="3" placeholder="Describe el producto..." class="textarea w-full transition-all duration-200
            focus:outline-none focus:ring-2 focus:ring-primary" [ngClass]="{
       'border border-red-500 focus:ring-red-400': controlDescription?.errors && controlDescription?.dirty,
       'border border-base-300': !controlDescription?.errors
     }"></textarea>
+    -->
+
+    <form-input-tiptap formControlName="description"> </form-input-tiptap>
 
     <!-- contador -->
     <div class="text-right text-xs opacity-50 mt-2">

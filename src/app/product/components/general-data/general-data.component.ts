@@ -2,12 +2,13 @@ import { ChangeDetectionStrategy, Component, Input, input, OnInit, OnDestroy, si
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { JsonPipe, NgClass } from '@angular/common';
 import { FormInputNumericComponent } from '../../../shared/form/form-input-numeric.component/form-input-numeric.component';
+import { FormInputTiptapComponent } from '../../../shared/form/form-input-tip-tap.component/form-input-tip-tap.component';
 
 export type LANGUAGE = 'es-ES' | 'en-US'
 
 @Component({
   selector: 'product-form-general-data',
-  imports: [ReactiveFormsModule, JsonPipe, FormInputNumericComponent, NgClass  ],
+  imports: [ReactiveFormsModule, JsonPipe, FormInputNumericComponent, FormInputTiptapComponent, NgClass  ],
   templateUrl: './general-data.component.html',
   styleUrl: './general-data.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

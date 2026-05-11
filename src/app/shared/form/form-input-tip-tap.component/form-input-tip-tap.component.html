@@ -1,0 +1,105 @@
+<div class="border border-base-300 rounded-lg p-3 bg-base-100">
+
+  <!-- toolbar -->
+  <div class="flex gap-2 mb-2 border-b pb-2">
+
+    <button
+      type="button"
+      class="btn btn-xs"
+      [disabled]="!editor"
+      (click)="toggleBold()">
+      B
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-xs"
+      [disabled]="!editor"
+      (click)="toggleItalic()">
+
+      I
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-xs"
+      [disabled]="!editor"
+      (click)="toggleBulletList()">
+
+      • List
+    </button>
+    <button
+  type="button"
+  class="btn btn-xs btn-ghost"
+  [class.btn-active]="isTaskListActive()"
+  (click)="toggleTaskList()">
+  ☑
+</button>
+<button
+  type="button"
+  class="btn btn-xs btn-ghost"
+  [class.btn-active]="isOrderedListActive()"
+  (click)="toggleOrderedList()">
+  1.
+</button>
+<button
+  type="button"
+  class="btn btn-xs btn-ghost"
+  [class.btn-active]="isStrikeActive()"
+  [disabled]="!editor"
+  (click)="toggleStrike()">
+
+  S
+</button>
+    <button
+      type="button"
+      class="btn btn-xs btn-ghost"
+      [class.btn-active]="isUnderlineActive()"
+      (click)="toggleUnderline()">
+      U
+    </button>
+
+    <button
+      type="button"
+      class="btn btn-xs btn-ghost"
+      (click)="setLink()">
+      🔗
+    </button>
+    <button
+      type="button"
+      class="btn btn-xs btn-ghost"
+      (click)="unsetLink()">
+      ✖🔗
+    </button>
+    <div class="relative emoji-container">
+
+      <!-- botón -->
+      <button
+        type="button"
+        class="btn btn-xs"
+        (click)="showEmojiPicker = !showEmojiPicker">
+
+        😀
+      </button>
+
+      <!-- popup -->
+      @if (showEmojiPicker) {
+
+        <div class="absolute z-50 top-10 right-0">
+
+          <emoji-picker
+            (emoji-click)="addEmoji($event)">
+          </emoji-picker>
+
+        </div>
+
+      }
+
+    </div>
+
+  </div>
+
+  <!-- editor -->
+  <div class="prose max-w-none" #editorEl></div>
+
+</div>
