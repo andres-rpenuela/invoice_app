@@ -1,105 +1,65 @@
-<div class="border border-base-300 rounded-lg p-3 bg-base-100">
+<div class="border border-base-300 rounded-lg p-3 bg-base-100 flex flex-col h-[30vh]">
 
-  <!-- toolbar -->
-  <div class="flex gap-2 mb-2 border-b pb-2">
+  <!-- TOOLBAR RESPONSIVE -->
+  <div class="flex flex-wrap gap-2 mb-2 border-b pb-2 items-center">
 
-    <button
-      type="button"
-      class="btn btn-xs"
-      [disabled]="!editor"
-      (click)="toggleBold()">
-      B
-    </button>
+    <!-- FORMAT GROUP -->
+    <div class="flex flex-wrap gap-2 items-center flex-1">
 
-    <button
-      type="button"
-      class="btn btn-xs"
-      [disabled]="!editor"
-      (click)="toggleItalic()">
+      <button class="btn btn-xs" [disabled]="!editor" (click)="toggleBold()">B</button>
+      <button class="btn btn-xs" [disabled]="!editor" (click)="toggleItalic()">I</button>
 
-      I
-    </button>
+      <button class="btn btn-xs" [disabled]="!editor" (click)="toggleBulletList()">• List</button>
 
-    <button
-      type="button"
-      class="btn btn-xs"
-      [disabled]="!editor"
-      (click)="toggleBulletList()">
+      <button class="btn btn-xs btn-ghost" (click)="toggleTaskList()">☑</button>
+      <button class="btn btn-xs btn-ghost" (click)="toggleOrderedList()">1.</button>
 
-      • List
-    </button>
-    <button
-  type="button"
-  class="btn btn-xs btn-ghost"
-  [class.btn-active]="isTaskListActive()"
-  (click)="toggleTaskList()">
-  ☑
-</button>
-<button
-  type="button"
-  class="btn btn-xs btn-ghost"
-  [class.btn-active]="isOrderedListActive()"
-  (click)="toggleOrderedList()">
-  1.
-</button>
-<button
-  type="button"
-  class="btn btn-xs btn-ghost"
-  [class.btn-active]="isStrikeActive()"
-  [disabled]="!editor"
-  (click)="toggleStrike()">
+      <button class="btn btn-xs btn-ghost" (click)="toggleStrike()">S</button>
+      <button class="btn btn-xs btn-ghost" (click)="toggleUnderline()">U</button>
 
-  S
-</button>
-    <button
-      type="button"
-      class="btn btn-xs btn-ghost"
-      [class.btn-active]="isUnderlineActive()"
-      (click)="toggleUnderline()">
-      U
-    </button>
+      <button class="btn btn-xs btn-ghost" (click)="setLink()">🔗</button>
+      <button class="btn btn-xs btn-ghost" (click)="unsetLink()">✖🔗</button>
 
-    <button
-      type="button"
-      class="btn btn-xs btn-ghost"
-      (click)="setLink()">
-      🔗
-    </button>
-    <button
-      type="button"
-      class="btn btn-xs btn-ghost"
-      (click)="unsetLink()">
-      ✖🔗
-    </button>
-    <div class="relative emoji-container">
+    </div>
 
-      <!-- botón -->
-      <button
-        type="button"
-        class="btn btn-xs"
-        (click)="showEmojiPicker = !showEmojiPicker">
+    <!-- COLOR + EMOJI GROUP -->
+    <div class="flex gap-2 items-center ml-auto">
 
-        😀
-      </button>
+      <!-- COLOR -->
+      <div class="dropdown dropdown-end">
+        <label tabindex="0" class="btn btn-xs btn-ghost">🎨</label>
 
-      <!-- popup -->
-      @if (showEmojiPicker) {
-
-        <div class="absolute z-50 top-10 right-0">
-
-          <emoji-picker
-            (emoji-click)="addEmoji($event)">
-          </emoji-picker>
-
+        <div tabindex="0" class="dropdown-content p-3 shadow bg-base-100 rounded-box">
+          <input
+            type="color"
+            class="w-12 h-12 cursor-pointer"
+            (input)="setColor($event.target.value)" />
         </div>
+      </div>
 
-      }
+      <!-- EMOJI -->
+      <div class="relative">
+
+        <button class="btn btn-xs" (click)="showEmojiPicker = !showEmojiPicker">
+          😀
+        </button>
+
+        @if (showEmojiPicker) {
+          <div class="absolute z-50 top-10 right-0 bg-base-100 shadow rounded-box">
+
+            <emoji-picker (emoji-click)="addEmoji($event)"></emoji-picker>
+
+          </div>
+        }
+
+      </div>
 
     </div>
 
   </div>
 
-  <!-- editor -->
-  <div class="prose max-w-none" #editorEl></div>
-
+  <!-- EDITOR (SCROLL + RESPONSIVE) -->
+  <div class="flex-1 overflow-y-auto editor-box">
+    <div class="prose max-w-none h-full" #editorEl></div>
+  </div>
 </div>

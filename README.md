@@ -124,14 +124,10 @@ npx @angular/cli new proyecto
 ## TipTap
 
 ```
-npm install @tiptap/core @tiptap/starter-kit
-npm install @tiptap/extension-placeholder @tiptap/extension-underline
-npm install @tiptap/extension-bubble-menu
-npm install @tiptap/extension-underline
-npm install @tiptap/extension-task-list @tiptap/extension-task-item
-npm install @tiptap/extension-link @tiptap/extension-mention
-npm install emoji-picker-element
+npm install @tiptap/core@3.23.1 @tiptap/starter-kit@3.23.1 @tiptap/extension-placeholder@3.23.1 @tiptap/extension-underline@3.23.1 @tiptap/extension-bubble-menu@3.23.1 @tiptap/extension-task-list@3.23.1 @tiptap/extension-task-item@3.23.1 @tiptap/extension-link@3.23.1 @tiptap/extension-mention@3.23.1 @tiptap/extension-color@3.23.1 @tiptap/extension-text-style@3.23.1 @tiptap/extension-text-align@3.23.1
+
 npm install @tiptap/extension-emoji
+npm install emoji-picker-element
 ```
 Para visualizar los items:
 
